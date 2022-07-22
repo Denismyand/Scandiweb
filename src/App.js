@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { useQuery, gql } from "@apollo/client";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, NavLink, Link } from "react-router-dom";
 
 const Get_Categories = gql`
   query GetProducts {
@@ -76,9 +76,15 @@ function Header({ categories, changeCurrency }) {
     <div className="Header">
       {categories.map((category) => {
         return (
-          <Link to={category.name} key={category.name}>
-            <button className="headerButton">{category.name}</button>
-          </Link>
+          <NavLink
+            className={({ isActive }) =>
+              isActive ? "headerLink activeLink" : "headerLink"
+            }
+            to={category.name}
+            key={category.name}
+          >
+            {category.name.toUpperCase()}
+          </NavLink>
         );
       })}
       <div className="currencySetting">
@@ -97,7 +103,7 @@ function Header({ categories, changeCurrency }) {
 function CategoryPage({ category, currency }) {
   return (
     <div className="categoryPage">
-      <h1>{category.name}</h1>
+      <h1> Category: {category.name}</h1>
       <div className="productList">
         {category.products.map((product) => {
           return (
