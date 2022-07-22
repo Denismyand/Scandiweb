@@ -2,6 +2,9 @@ import { useState } from "react";
 import "./App.css";
 import { useQuery, gql } from "@apollo/client";
 import { Routes, Route, NavLink, Link } from "react-router-dom";
+import arrowDown from "./down-arrow.svg";
+import arrowUp from "./up-arrow.svg";
+import logo from "./logo.svg";
 
 const Get_Categories = gql`
   query GetProducts {
@@ -40,16 +43,29 @@ const Get_Categories = gql`
 export default function App() {
   const { loading, error, data } = useQuery(Get_Categories);
   const [currency, setCurrency] = useState("USD");
+  const [currencySign, setCurrencySign] = useState("$");
+  const [isCurrActive, setIsCurrActive] = useState(false);
 
-  function changeCurrency(curr) {
+  function showCurrencyDropdown() {
+    setIsCurrActive(!isCurrActive);
+  }
+
+  function changeCurrency(curr, currSign) {
     setCurrency(curr);
+    setCurrencySign(currSign);
   }
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :</p>;
   return (
     <>
-      <Header categories={data.categories} changeCurrency={changeCurrency} />
+      <Header
+        categories={data.categories}
+        changeCurrency={changeCurrency}
+        currencySign={currencySign}
+        showCurrencyDropdown={showCurrencyDropdown}
+        isCurrActive={isCurrActive}
+      />
       <Routes>
         <Route
           path="/*"
@@ -71,7 +87,13 @@ export default function App() {
   );
 }
 
-function Header({ categories, changeCurrency }) {
+function Header({
+  categories,
+  currencySign,
+  changeCurrency,
+  showCurrencyDropdown,
+  isCurrActive,
+}) {
   return (
     <div className="Header">
       {categories.map((category) => {
@@ -87,14 +109,55 @@ function Header({ categories, changeCurrency }) {
           </NavLink>
         );
       })}
+      <img className="logo" src={logo} alt="logo" />
       <div className="currencySetting">
-        <button className="currencyChoiserButton">Currency</button>
-        <div className="currencyList">
-          <p onClick={() => changeCurrency("USD")}>USD ($)</p>
-          <p onClick={() => changeCurrency("GBP")}>GBP (£)</p>
-          <p onClick={() => changeCurrency("AUD")}>AUD (A$)</p>
-          <p onClick={() => changeCurrency("JPY")}>JPY (¥)</p>
-        </div>
+        <button
+          className="currencyChoiserButton"
+          onClick={() => showCurrencyDropdown()}
+        >
+          {currencySign + " "}
+          <img
+            src={isCurrActive ? arrowUp : arrowDown}
+            width="10px"
+            height="10px"
+          />
+        </button>
+        {isCurrActive ? (
+          <div className="currencyList">
+            <p
+              onClick={() => {
+                changeCurrency("USD", "$");
+                showCurrencyDropdown();
+              }}
+            >
+              $ USD
+            </p>
+            <p
+              onClick={() => {
+                changeCurrency("GBP", "£");
+                showCurrencyDropdown();
+              }}
+            >
+              £ GBP
+            </p>
+            <p
+              onClick={() => {
+                changeCurrency("AUD", "A$");
+                showCurrencyDropdown();
+              }}
+            >
+              A$ AUD
+            </p>
+            <p
+              onClick={() => {
+                changeCurrency("JPY", "¥");
+                showCurrencyDropdown();
+              }}
+            >
+              ¥ JPY
+            </p>
+          </div>
+        ) : null}
       </div>
     </div>
   );
