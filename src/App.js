@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { useQuery, gql } from "@apollo/client";
 import { Routes, Route, NavLink, Link } from "react-router-dom";
 import arrowDown from "./down-arrow.svg";
 import arrowUp from "./up-arrow.svg";
 import logo from "./logo.svg";
+import cartIcon from "./cart.svg";
 
 const Get_Categories = gql`
   query GetProducts {
@@ -45,6 +46,36 @@ export default function App() {
   const [currency, setCurrency] = useState("USD");
   const [currencySign, setCurrencySign] = useState("$");
   const [isCurrActive, setIsCurrActive] = useState(false);
+  const [cart, setCart] = useState(isCartCached());
+
+  const maxCartQuantity = 5;
+
+  function handleAddToCart(product) {
+    let foundInCart = cart.find((cartItem) => cartItem.id === product.id);
+    if (foundInCart) {
+      let nextCart = cart.map((cartItem) => {
+        if (cartItem.id === foundInCart.id) {
+          if (foundInCart.cartQuantity >= maxCartQuantity) {
+            return { ...foundInCart, cartQuantity: Number(maxCartQuantity) };
+          }
+          return {
+            ...foundInCart,
+            cartQuantity: Number(foundInCart.cartQuantity + 1),
+          };
+        }
+        return cartItem;
+      });
+      setCart(nextCart);
+    }
+    setCart([...cart, { ...product, cartQuantity: 1 }]);
+  }
+
+  function isCartCached() {
+    if (localStorage.getItem("cart")) {
+      return JSON.parse(localStorage.getItem("cart"));
+    }
+    return [];
+  }
 
   function showCurrencyDropdown() {
     setIsCurrActive(!isCurrActive);
@@ -54,6 +85,10 @@ export default function App() {
     setCurrency(curr);
     setCurrencySign(currSign);
   }
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :</p>;
@@ -70,7 +105,11 @@ export default function App() {
         <Route
           path="/*"
           element={
-            <CategoryPage category={data.categories[0]} currency={currency} />
+            <CategoryPage
+              category={data.categories[0]}
+              currency={currency}
+              handleAddToCart={handleAddToCart}
+            />
           }
         />
         {data.categories.map((category) => {
@@ -78,7 +117,13 @@ export default function App() {
             <Route
               path={"/" + category.name}
               key={category.name}
-              element={<CategoryPage category={category} currency={currency} />}
+              element={
+                <CategoryPage
+                  category={category}
+                  currency={currency}
+                  handleAddToCart={handleAddToCart}
+                />
+              }
             />
           );
         })}
@@ -163,7 +208,7 @@ function Header({
   );
 }
 
-function CategoryPage({ category, currency }) {
+function CategoryPage({ category, currency, handleAddToCart }) {
   return (
     <div className="categoryPage">
       <h1> Category: {category.name}</h1>
@@ -172,6 +217,10 @@ function CategoryPage({ category, currency }) {
           return (
             <div className="product" key={product.id}>
               <img className="productImg" src={product.gallery[0]} />
+              <button
+                className="addToCartButton"
+                onClick={() => handleAddToCart(product)}
+              />
               <div className="productInfo">
                 <p>{product.name}</p>
                 {product.prices.map((price) => {
