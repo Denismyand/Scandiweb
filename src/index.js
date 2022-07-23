@@ -15,45 +15,41 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-client
-  .query({
-    query: gql`
-      query GetProducts {
-        categories {
+client.query({
+  query: gql`
+    query GetProducts {
+      categories {
+        name
+        products {
+          id
           name
-          products {
+          inStock
+          gallery
+          description
+          category
+          attributes {
             id
             name
-            inStock
-            gallery
-            description
-            category
-            attributes {
+            type
+            items {
+              displayValue
+              value
               id
-              name
-              type
-              items {
-                displayValue
-                value
-                id
-              }
             }
-            prices {
-              currency {
-                label
-                symbol
-              }
-              amount
-            }
-            brand
           }
+          prices {
+            currency {
+              label
+              symbol
+            }
+            amount
+          }
+          brand
         }
       }
-    `,
-  })
-  .then((result) => {
-    return console.log(result);
-  });
+    }
+  `,
+});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

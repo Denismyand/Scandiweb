@@ -4,8 +4,7 @@ import { useQuery, gql } from "@apollo/client";
 import { Routes, Route, NavLink, Link } from "react-router-dom";
 import arrowDown from "./down-arrow.svg";
 import arrowUp from "./up-arrow.svg";
-import logo from "./logo.svg";
-import cartIcon from "./cart.svg";
+import shopLogo from "./logo.svg";
 
 const Get_Categories = gql`
   query GetProducts {
@@ -154,7 +153,7 @@ function Header({
           </NavLink>
         );
       })}
-      <img className="logo" src={logo} alt="logo" />
+      <img className="logo" src={shopLogo} alt="logo" />
       <div className="currencySetting">
         <button
           className="currencyChoiserButton"
@@ -168,42 +167,52 @@ function Header({
           />
         </button>
         {isCurrActive ? (
-          <div className="currencyList">
-            <p
-              onClick={() => {
-                changeCurrency("USD", "$");
-                showCurrencyDropdown();
-              }}
-            >
-              $ USD
-            </p>
-            <p
-              onClick={() => {
-                changeCurrency("GBP", "£");
-                showCurrencyDropdown();
-              }}
-            >
-              £ GBP
-            </p>
-            <p
-              onClick={() => {
-                changeCurrency("AUD", "A$");
-                showCurrencyDropdown();
-              }}
-            >
-              A$ AUD
-            </p>
-            <p
-              onClick={() => {
-                changeCurrency("JPY", "¥");
-                showCurrencyDropdown();
-              }}
-            >
-              ¥ JPY
-            </p>
-          </div>
+          <CurrencyList
+            changeCurrency={changeCurrency}
+            showCurrencyDropdown={showCurrencyDropdown}
+          />
         ) : null}
       </div>
+      <button className="headerCartButton" />
+    </div>
+  );
+}
+
+function CurrencyList({ changeCurrency, showCurrencyDropdown }) {
+  return (
+    <div className="currencyList">
+      <p
+        onClick={() => {
+          changeCurrency("USD", "$");
+          showCurrencyDropdown();
+        }}
+      >
+        $ USD
+      </p>
+      <p
+        onClick={() => {
+          changeCurrency("GBP", "£");
+          showCurrencyDropdown();
+        }}
+      >
+        £ GBP
+      </p>
+      <p
+        onClick={() => {
+          changeCurrency("AUD", "A$");
+          showCurrencyDropdown();
+        }}
+      >
+        A$ AUD
+      </p>
+      <p
+        onClick={() => {
+          changeCurrency("JPY", "¥");
+          showCurrencyDropdown();
+        }}
+      >
+        ¥ JPY
+      </p>
     </div>
   );
 }
@@ -215,7 +224,13 @@ function CategoryPage({ category, currency, handleAddToCart }) {
       <div className="productList">
         {category.products.map((product) => {
           return (
-            <div className="product" key={product.id}>
+            <div
+              className={product.inStock ? "product" : "outOfStockProduct"}
+              key={product.id}
+            >
+              {product.inStock ? null : (
+                <p className="outOfStockMessage">OUT OF STOCK</p>
+              )}
               <img className="productImg" src={product.gallery[0]} />
               <button
                 className="addToCartButton"

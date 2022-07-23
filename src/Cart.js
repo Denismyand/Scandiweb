@@ -1,3 +1,1 @@
-import { useState } from "react";
-
-export function MiniCart() {}
+export function MiniCart({ cart }) {}

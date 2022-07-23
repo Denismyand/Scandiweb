@@ -43,21 +43,25 @@ h1 {
 .currencySetting {
   position: absolute;
   top: 0;
-  right: 11%;
-  display: inline-block;
+  right: 13%;
   width: 100px;
 }
 .currencyChoiserButton {
-  width: 100px;
+  width: 60px;
   height: 60px;
   background-color: inherit;
   color: #000000;
-  padding: 16px;
+  padding: 22px 10px;
   font-size: 16px;
   border: none;
   cursor: pointer;
 }
+.currencyChoiserButton:hover {
+  background-color: #eeebeb;
+}
 .currencyList {
+  position: relative;
+  left: -20px;
   background-color: #ffffff;
   border: none;
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
@@ -72,6 +76,20 @@ h1 {
 }
 .currencyList p:hover {
   background-color: rgba(194, 188, 188, 0.3);
+}
+.headerCartButton {
+  width: 60px;
+  height: 60px;
+  padding: 22px 10px;
+  background: url(./cartdark.svg) no-repeat center;
+  position: absolute;
+  top: 0;
+  right: 11%;
+  border: 0;
+  cursor: pointer;
+}
+.headerCartButton:hover {
+  background-color: #eeebeb;
 }
 .categoryPage {
   padding: 30px 10%;
@@ -90,10 +108,32 @@ h1 {
   width: 454px;
   height: 600px;
 }
+.outOfStockProduct {
+  position: relative;
+  width: 454px;
+  height: 600px;
+  opacity: 0.5;
+}
+.outOfStockMessage {
+  visibility: hidden;
+  position: absolute;
+  font-size: 24px;
+  font-weight: 400;
+  font: Raleway;
+  color: #000000;
+  top: 40%;
+  left: 30%;
+  color: #676869;
+}
+.outOfStockProduct:hover .outOfStockMessage {
+  visibility: visible;
+}
 .product:hover {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
-
+.outOfStockProduct:hover {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
 .addToCartButton {
   visibility: hidden;
   position: absolute;
