@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import { MiniCart } from "./Cart.js";
 import { useQuery, gql } from "@apollo/client";
-import { Routes, Route, NavLink, Link } from "react-router-dom";
-import arrowDown from "./down-arrow.svg";
-import arrowUp from "./up-arrow.svg";
-import shopLogo from "./logo.svg";
+import { Routes, Route, NavLink } from "react-router-dom";
+import arrowDown from "./img/down-arrow.svg";
+import arrowUp from "./img/up-arrow.svg";
+import shopLogo from "./img/logo.svg";
 
 const Get_Categories = gql`
   query GetProducts {
@@ -46,6 +47,14 @@ export default function App() {
   const [currencySign, setCurrencySign] = useState("$");
   const [isCurrActive, setIsCurrActive] = useState(false);
   const [cart, setCart] = useState(isCartCached());
+  const [miniCartActive, setMiniCartActive] = useState(false);
+
+  function isCartCached() {
+    if (localStorage.getItem("cart")) {
+      return JSON.parse(localStorage.getItem("cart"));
+    }
+    return [];
+  }
 
   const maxCartQuantity = 5;
 
@@ -64,16 +73,25 @@ export default function App() {
         }
         return cartItem;
       });
-      setCart(nextCart);
+      return setCart(nextCart);
     }
     setCart([...cart, { ...product, cartQuantity: 1 }]);
   }
 
-  function isCartCached() {
-    if (localStorage.getItem("cart")) {
-      return JSON.parse(localStorage.getItem("cart"));
+  function handleDecreaseCartQuantity(product) {
+    if (product.cartQuantity > 1) {
+      let decreased = cart.map((item) => {
+        if (item.id === product.id) {
+          return {
+            ...item,
+            cartQuantity: Number(item.cartQuantity) - 1,
+          };
+        }
+        return item;
+      });
+      return setCart(decreased);
     }
-    return [];
+    return setCart(cart.filter((item) => item.id !== product.id));
   }
 
   function showCurrencyDropdown() {
@@ -83,6 +101,39 @@ export default function App() {
   function changeCurrency(curr, currSign) {
     setCurrency(curr);
     setCurrencySign(currSign);
+  }
+
+  function showMiniCart() {
+    setMiniCartActive(!miniCartActive);
+  }
+
+  function handleSelectAttribute(product, attribute, id) {
+    let changedProduct = cart.find((cartItem) => cartItem.id === product.id);
+    let nextCart = cart.map((cartItem) => {
+      if (cartItem.id !== changedProduct.id) {
+        return cartItem;
+      }
+      let nextAttribute = cartItem.attributes.map((foundAttribute) => {
+        if (foundAttribute.id !== attribute.id) {
+          return foundAttribute;
+        }
+        let nextAttributeItem = foundAttribute.items.map(
+          (foundAttributeItem) => {
+            if (foundAttributeItem.id === id) {
+              return { ...foundAttributeItem, selectedItem: true };
+            }
+            return {
+              displayValue: foundAttributeItem.displayValue,
+              value: foundAttributeItem.value,
+              id: foundAttributeItem.id,
+            };
+          }
+        );
+        return { ...foundAttribute, items: nextAttributeItem };
+      });
+      return { ...cartItem, attributes: nextAttribute };
+    });
+    setCart(nextCart);
   }
 
   useEffect(() => {
@@ -99,7 +150,18 @@ export default function App() {
         currencySign={currencySign}
         showCurrencyDropdown={showCurrencyDropdown}
         isCurrActive={isCurrActive}
+        showMiniCart={showMiniCart}
       />
+      {miniCartActive ? (
+        <MiniCart
+          cart={cart}
+          currency={currency}
+          currencySign={currencySign}
+          handleSelectAttribute={handleSelectAttribute}
+          handleAddToCart={handleAddToCart}
+          handleDecreaseCartQuantity={handleDecreaseCartQuantity}
+        />
+      ) : null}
       <Routes>
         <Route
           path="/*"
@@ -137,6 +199,7 @@ function Header({
   changeCurrency,
   showCurrencyDropdown,
   isCurrActive,
+  showMiniCart,
 }) {
   return (
     <div className="Header">
@@ -164,6 +227,7 @@ function Header({
             src={isCurrActive ? arrowUp : arrowDown}
             width="10px"
             height="10px"
+            alt=""
           />
         </button>
         {isCurrActive ? (
@@ -173,7 +237,7 @@ function Header({
           />
         ) : null}
       </div>
-      <button className="headerCartButton" />
+      <button className="headerCartButton" onClick={showMiniCart} />
     </div>
   );
 }
@@ -219,7 +283,7 @@ function CurrencyList({ changeCurrency, showCurrencyDropdown }) {
 
 function CategoryPage({ category, currency, handleAddToCart }) {
   return (
-    <div className="categoryPage">
+    <div className="CategoryPage">
       <h1> Category: {category.name}</h1>
       <div className="productList">
         {category.products.map((product) => {
@@ -231,7 +295,11 @@ function CategoryPage({ category, currency, handleAddToCart }) {
               {product.inStock ? null : (
                 <p className="outOfStockMessage">OUT OF STOCK</p>
               )}
-              <img className="productImg" src={product.gallery[0]} />
+              <img
+                className="productImg"
+                src={product.gallery[0]}
+                alt={product.name}
+              />
               <button
                 className="addToCartButton"
                 onClick={() => handleAddToCart(product)}
@@ -246,6 +314,7 @@ function CategoryPage({ category, currency, handleAddToCart }) {
                       </p>
                     );
                   }
+                  return null;
                 })}
               </div>
             </div>
