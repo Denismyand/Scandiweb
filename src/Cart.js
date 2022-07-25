@@ -4,17 +4,11 @@ export function MiniCart({
   cart,
   currency,
   currencySign,
+  getCartQuantity,
   handleSelectAttribute,
   handleAddToCart,
   handleDecreaseCartQuantity,
 }) {
-  function getCartQuantity() {
-    let total = 0;
-
-    cart.map((cartItem) => (total += cartItem.cartQuantity));
-    return total;
-  }
-
   function getCartTotal() {
     let total = 0;
 
@@ -38,23 +32,12 @@ export function MiniCart({
       {cart.length > 0 ? (
         <>
           <b>My cart.</b> <span>{getCartQuantity()} items</span>
-          <div className="miniCartItemList">
+          <div>
             {cart.map((cartItem) => {
               return (
                 <div className="miniCartItem" key={cartItem.id}>
                   <div className="miniCartItemInfo">
-                    <p>{cartItem.brand}</p>
-                    <p>{cartItem.name}</p>
-                    {cartItem.prices.map((price) => {
-                      if (price.currency.label === currency) {
-                        return (
-                          <p key={price.currency.label}>
-                            <b>{price.currency.symbol + price.amount}</b>
-                          </p>
-                        );
-                      }
-                      return null;
-                    })}
+                    <MiniCartItemInfo cartItem={cartItem} currency={currency} />
                     <ProductAttributes
                       product={cartItem}
                       handleSelectAttribute={handleSelectAttribute}
@@ -80,14 +63,7 @@ export function MiniCart({
               );
             })}
           </div>
-          <div className="miniCartTotal">
-            <div className="miniCartTotalLeft">
-              <b>Total</b>
-            </div>
-            <div className="miniCartTotalRight">
-              <b>{getCartTotal()}</b>
-            </div>
-          </div>
+          <MiniCartTotal getCartTotal={getCartTotal} />
         </>
       ) : (
         <h1>Your cart is empty</h1>
@@ -105,8 +81,9 @@ function ProductAttributes({ product, handleSelectAttribute }) {
           {attribute.items.map((item) => (
             <button
               className={
-                "textAttributeSelectButton" +
-                (item.selectedItem ? " activeTextAttribute" : "")
+                item.selectedItem
+                  ? "activeTextAttributeSelectButton"
+                  : "textAttributeSelectButton"
               }
               key={item.id}
               onClick={() => handleSelectAttribute(product, attribute, item.id)}
@@ -126,8 +103,9 @@ function ProductAttributes({ product, handleSelectAttribute }) {
             return (
               <button
                 className={
-                  "swatchAttributeSelectButton" +
-                  (item.selectedItem ? " activeSwatchAttribute" : "")
+                  item.selectedItem
+                    ? " activeSwatchAttributeSelectButton"
+                    : "swatchAttributeSelectButton"
                 }
                 key={item.id}
                 style={{
@@ -146,6 +124,40 @@ function ProductAttributes({ product, handleSelectAttribute }) {
     <>
       {product.attributes.map((attribute) => {
         return <div key={attribute.id}>{differAttributes(attribute)}</div>;
+      })}
+    </>
+  );
+}
+
+function MiniCartTotal({ getCartTotal }) {
+  return (
+    <div className="miniCartTotal">
+      <div className="miniCartTotalLeft">
+        <b>Total</b>
+        <button className="toCartMiniCartButton">VIEW CART</button>
+      </div>
+      <div className="miniCartTotalRight">
+        <b>{getCartTotal()}</b>
+        <button className="toCheckoutMiniCartButton">CHECK OUT</button>
+      </div>
+    </div>
+  );
+}
+
+function MiniCartItemInfo({ cartItem, currency }) {
+  return (
+    <>
+      <p>{cartItem.brand}</p>
+      <p>{cartItem.name}</p>
+      {cartItem.prices.map((price) => {
+        if (price.currency.label === currency) {
+          return (
+            <p key={price.currency.label}>
+              <b>{price.currency.symbol + price.amount}</b>
+            </p>
+          );
+        }
+        return null;
       })}
     </>
   );

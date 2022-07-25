@@ -93,6 +93,17 @@
 .headerCartButton:hover {
   background-color: #eeebeb;
 }
+.headerCartQuantity {
+  padding-top: 3px;
+  position: absolute;
+  top: 11px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  background-color: #000000;
+  color: #ffffff;
+  border-radius: 50%;
+}
 .CategoryPage {
   padding: 30px 10%;
   display: flex;

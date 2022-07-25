@@ -56,6 +56,13 @@ export default function App() {
     return [];
   }
 
+  function getCartQuantity() {
+    let total = 0;
+
+    cart.map((cartItem) => (total += cartItem.cartQuantity));
+    return total;
+  }
+
   const maxCartQuantity = 5;
 
   function handleAddToCart(product) {
@@ -151,12 +158,14 @@ export default function App() {
         showCurrencyDropdown={showCurrencyDropdown}
         isCurrActive={isCurrActive}
         showMiniCart={showMiniCart}
+        getCartQuantity={getCartQuantity}
       />
       {miniCartActive ? (
         <MiniCart
           cart={cart}
           currency={currency}
           currencySign={currencySign}
+          getCartQuantity={getCartQuantity}
           handleSelectAttribute={handleSelectAttribute}
           handleAddToCart={handleAddToCart}
           handleDecreaseCartQuantity={handleDecreaseCartQuantity}
@@ -200,6 +209,7 @@ function Header({
   showCurrencyDropdown,
   isCurrActive,
   showMiniCart,
+  getCartQuantity,
 }) {
   return (
     <div className="Header">
@@ -237,7 +247,9 @@ function Header({
           />
         ) : null}
       </div>
-      <button className="headerCartButton" onClick={showMiniCart} />
+      <button className="headerCartButton" onClick={showMiniCart}>
+        <span className="headerCartQuantity">{getCartQuantity()}</span>
+      </button>
     </div>
   );
 }
