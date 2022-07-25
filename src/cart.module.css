@@ -1,0 +1,212 @@
+hr {
+  opacity: 0.3;
+}
+.cartEmptyMessage {
+  text-align: center;
+}
+.cartEmptyMessage p {
+  font-size: 20px;
+}
+.CartPage {
+  padding: 0 10% 50px;
+}
+.CartPage h1 {
+  font-family: "Raleway";
+  padding: 50px 0;
+}
+.cartItem {
+  display: flex;
+  padding: 20px 0;
+  position: relative;
+}
+.cartItemInfo {
+  width: 80%;
+}
+.cartItemInfo {
+  line-height: 30px;
+}
+.brand {
+  font-weight: 700;
+  font-size: 24px;
+  font-family: "Raleway";
+}
+.productName {
+  font-family: "Raleway";
+  font-size: 20px;
+}
+.productPrice {
+  font-family: "Raleway";
+  font-size: 24px;
+  font-weight: 900;
+  padding: 10px 0;
+}
+.cartItemQuantity {
+  position: relative;
+  width: 40px;
+}
+
+.cartIncreaseQtyButton {
+  background: url(./img/increase.svg) no-repeat center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  cursor: pointer;
+}
+.cartIncreaseQtyButton:hover {
+  background-color: #eeeeee;
+}
+.cartIncreaseQtyButton:active {
+  background-color: #dddddd;
+}
+
+.cartQtyNumber {
+  position: absolute;
+  top: 50%;
+  width: 40px;
+  text-align: center;
+  transform: translateY(-50%);
+  text-align: center;
+  font-size: 20px;
+}
+
+.cartDecreaseQtyButton {
+  background: url(./img/decrease.svg) no-repeat center;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  cursor: pointer;
+}
+.cartDecreaseQtyButton:hover {
+  background-color: #eeeeee;
+}
+.cartDecreaseQtyButton:active {
+  background-color: #dddddd;
+}
+
+.cartItemPicture {
+  padding: 20px;
+  width: 300px;
+  height: 400px;
+}
+
+.prevPicButton {
+  position: absolute;
+  bottom: 50px;
+  right: 60px;
+  border: 0;
+  background: url(./img/prev.svg) no-repeat center;
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 24px;
+  height: 24px;
+}
+.prevPicButton:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.prevPicButton:active {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+.nextPicButton {
+  position: absolute;
+  bottom: 50px;
+  right: 30px;
+  border: 0;
+  background: url(./img/next.svg) no-repeat center;
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 24px;
+  height: 24px;
+}
+.nextPicButton:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.nextPicButton:active {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.attributeName {
+  font-family: "Roboto Condensed";
+  font-weight: 700;
+  font-size: 16px;
+}
+.textAttributeSelectButton {
+  width: 60px;
+  height: 45px;
+  margin: 10px 10px 10px 0;
+  font-family: "Source Sans Pro";
+  font-size: 18px;
+  font-weight: 200;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+.textAttributeSelectButton:hover {
+  background-color: #eeeeee;
+}
+.textAttributeSelectButton:active {
+  background-color: #dddddd;
+}
+.activeTextAttributeSelectButton {
+  width: 60px;
+  height: 45px;
+  margin: 10px 10px 10px 0;
+  font-family: "Source Sans Pro";
+  font-size: 18px;
+  font-weight: 200;
+  background-color: #1d1f22;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.swatchAttributeSelectButton {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  margin: 10px 10px 10px 0;
+  cursor: pointer;
+}
+.swatchAttributeSelectButton:hover {
+  box-shadow: 0 0 0 4px #ffffff, 0 0 0 5px #1d1f22;
+}
+
+.activeSwatchAttributeSelectButton {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  margin: 10px 10px 10px 0;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #5ece7b;
+  cursor: pointer;
+}
+
+.cartTotal {
+  padding: 20px 0;
+  display: flex;
+  gap: 20px;
+}
+.cartTotal * {
+  padding-bottom: 5px;
+  font-size: 20px;
+}
+.cartTotalText {
+  font-weight: 500;
+}
+.orderButton {
+  width: 300px;
+  height: 45px;
+  border: 0;
+  font-family: "Raleway";
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #5ece7b;
+  color: #ffffff;
+  cursor: pointer;
+}
+.orderButton:hover {
+  background-color: #16994f;
+}
+.orderButton:active {
+  background-color: #118342;
+}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import { MiniCart } from "./Cart.js";
+import { MiniCart } from "./MiniCart.js";
+import { Cart } from "./Cart.js";
 import { useQuery, gql } from "@apollo/client";
 import { Routes, Route, NavLink } from "react-router-dom";
 import arrowDown from "./img/down-arrow.svg";
@@ -63,6 +64,42 @@ export default function App() {
     return total;
   }
 
+  function getCartTotal() {
+    let total = 0;
+
+    cart.map((cartItem) => {
+      let itemPrice;
+
+      cartItem.prices.map((price) => {
+        if (price.currency.label === currency) {
+          itemPrice = price.amount;
+        }
+        return null;
+      });
+
+      return (total += cartItem.cartQuantity * itemPrice);
+    });
+    return currencySign + Math.round(total * 100) / 100;
+  }
+
+  function getCartTax(tax) {
+    let total = 0;
+
+    cart.map((cartItem) => {
+      let itemPrice;
+
+      cartItem.prices.map((price) => {
+        if (price.currency.label === currency) {
+          itemPrice = price.amount;
+        }
+        return null;
+      });
+
+      return (total += cartItem.cartQuantity * itemPrice);
+    });
+    return currencySign + Math.round(total * (tax / 100) * 100) / 100;
+  }
+
   const maxCartQuantity = 5;
 
   function handleAddToCart(product) {
@@ -114,6 +151,24 @@ export default function App() {
     setMiniCartActive(!miniCartActive);
   }
 
+  // function selectFirstAttributes(product) {
+  //   let newProduct = cart.find((cartItem) => cartItem.id === product.id);
+  //   let nextCart = cart.map((cartItem) => {
+  //     if (cartItem.id !== newProduct.id) {
+  //       return cartItem;
+  //     }
+  //     let newAttributes = cartItem.attributes.map((attribute) => {
+  //       return (attribute.items.items[0] = {
+  //         ...attribute.items.items[0],
+  //         selectedItem: true,
+  //       });
+  //       //  {...attribute, items: [...attribute.items, changedItem:{...attribute.items.items[0], selectedItem: true}]};
+  //     });
+  //     return { ...cartItem, attributes: newAttributes };
+  //   });
+  //   setCart(nextCart);
+  // }
+
   function handleSelectAttribute(product, attribute, id) {
     let changedProduct = cart.find((cartItem) => cartItem.id === product.id);
     let nextCart = cart.map((cartItem) => {
@@ -162,10 +217,11 @@ export default function App() {
       />
       {miniCartActive ? (
         <MiniCart
+          showMiniCart={showMiniCart}
           cart={cart}
           currency={currency}
-          currencySign={currencySign}
           getCartQuantity={getCartQuantity}
+          getCartTotal={getCartTotal}
           handleSelectAttribute={handleSelectAttribute}
           handleAddToCart={handleAddToCart}
           handleDecreaseCartQuantity={handleDecreaseCartQuantity}
@@ -197,6 +253,22 @@ export default function App() {
             />
           );
         })}
+        <Route
+          path="/cart"
+          element={
+            <Cart
+              cart={cart}
+              setCart={setCart}
+              currency={currency}
+              getCartTax={getCartTax}
+              getCartQuantity={getCartQuantity}
+              getCartTotal={getCartTotal}
+              handleSelectAttribute={handleSelectAttribute}
+              handleAddToCart={handleAddToCart}
+              handleDecreaseCartQuantity={handleDecreaseCartQuantity}
+            />
+          }
+        />
       </Routes>
     </>
   );
@@ -294,6 +366,9 @@ function CurrencyList({ changeCurrency, showCurrencyDropdown }) {
 }
 
 function CategoryPage({ category, currency, handleAddToCart }) {
+  function handleAddToCartClick(product) {
+    handleAddToCart(product);
+  }
   return (
     <div className="CategoryPage">
       <h1> Category: {category.name}</h1>
@@ -314,7 +389,7 @@ function CategoryPage({ category, currency, handleAddToCart }) {
               />
               <button
                 className="addToCartButton"
-                onClick={() => handleAddToCart(product)}
+                onClick={() => handleAddToCartClick(product)}
               />
               <div className="productInfo">
                 <p>{product.name}</p>

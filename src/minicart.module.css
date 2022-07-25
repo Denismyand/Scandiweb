@@ -1,11 +1,18 @@
+.cartEmptyMessage {
+  text-align: center;
+}
+.cartEmptyMessage p {
+  font-size: 20px;
+}
+
 .MiniCart {
   position: absolute;
   right: 11%;
-  top: 60px;
+  top: 70px;
   width: 450px;
   height: 700px;
   background-color: #ffffff;
-  border: 1px solid #000000;
+  border: 0;
   z-index: 1;
   padding: 20px 15px 20px;
   overflow: auto;
@@ -25,13 +32,13 @@
   font-size: 18px;
   font-weight: 300;
   padding: 5px 0;
-  font-family: Raleway;
+  font-family: "Raleway";
 }
 .textAttributeSelectButton {
   width: 40px;
   height: 40px;
   margin: 5px 5px 5px 0;
-  font-family: Source Sans Pro;
+  font-family: "Source Sans Pro";
   background-color: #ffffff;
   cursor: pointer;
 }
@@ -45,8 +52,8 @@
   width: 40px;
   height: 40px;
   margin: 5px 5px 5px 0;
-  font-family: Source Sans Pro;
-  background-color: #000000;
+  font-family: "Source Sans Pro";
+  background-color: #1d1f22;
   color: #ffffff;
   cursor: pointer;
 }
@@ -66,7 +73,7 @@
   cursor: pointer;
 }
 .swatchAttributeSelectButton:hover {
-  box-shadow: 0 0 0 4px #ffffff, 0 0 0 5px #000000;
+  box-shadow: 0 0 0 4px #ffffff, 0 0 0 5px #1d1f22;
 }
 .miniCartItemPicture {
   width: 160px;
@@ -137,9 +144,15 @@
   left: 0;
   width: 190px;
   height: 55px;
+  border: 1px solid #000000;
+  padding-top: 17px;
+  text-align: center;
+  text-decoration: none;
+  font-family: "Raleway";
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 500;
   background-color: #ffffff;
+  color: #000000;
   cursor: pointer;
 }
 .toCartMiniCartButton:hover {
@@ -159,8 +172,12 @@
   width: 190px;
   height: 55px;
   border: 0;
+  padding-top: 17px;
+  text-align: center;
+  text-decoration: none;
+  font-family: "Raleway";
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 500;
   background-color: #5ece7b;
   color: #ffffff;
   cursor: pointer;
