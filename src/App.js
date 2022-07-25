@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import { Currency } from "./Currency.js";
 import { MiniCart } from "./MiniCart.js";
 import { Cart } from "./Cart.js";
 import { useQuery, gql } from "@apollo/client";
 import { Routes, Route, NavLink } from "react-router-dom";
-import arrowDown from "./img/down-arrow.svg";
-import arrowUp from "./img/up-arrow.svg";
+
 import shopLogo from "./img/logo.svg";
 
 const Get_Categories = gql`
@@ -205,7 +205,7 @@ export default function App() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :</p>;
   return (
-    <>
+    <div onClick={() => (isCurrActive ? setIsCurrActive(false) : null)}>
       <Header
         categories={data.categories}
         changeCurrency={changeCurrency}
@@ -270,7 +270,7 @@ export default function App() {
           }
         />
       </Routes>
-    </>
+    </div>
   );
 }
 
@@ -299,68 +299,15 @@ function Header({
         );
       })}
       <img className="logo" src={shopLogo} alt="logo" />
-      <div className="currencySetting">
-        <button
-          className="currencyChoiserButton"
-          onClick={() => showCurrencyDropdown()}
-        >
-          {currencySign + " "}
-          <img
-            src={isCurrActive ? arrowUp : arrowDown}
-            width="10px"
-            height="10px"
-            alt=""
-          />
-        </button>
-        {isCurrActive ? (
-          <CurrencyList
-            changeCurrency={changeCurrency}
-            showCurrencyDropdown={showCurrencyDropdown}
-          />
-        ) : null}
-      </div>
+      <Currency
+        currencySign={currencySign}
+        changeCurrency={changeCurrency}
+        showCurrencyDropdown={showCurrencyDropdown}
+        isCurrActive={isCurrActive}
+      />
       <button className="headerCartButton" onClick={showMiniCart}>
         <span className="headerCartQuantity">{getCartQuantity()}</span>
       </button>
-    </div>
-  );
-}
-
-function CurrencyList({ changeCurrency, showCurrencyDropdown }) {
-  return (
-    <div className="currencyList">
-      <p
-        onClick={() => {
-          changeCurrency("USD", "$");
-          showCurrencyDropdown();
-        }}
-      >
-        $ USD
-      </p>
-      <p
-        onClick={() => {
-          changeCurrency("GBP", "£");
-          showCurrencyDropdown();
-        }}
-      >
-        £ GBP
-      </p>
-      <p
-        onClick={() => {
-          changeCurrency("AUD", "A$");
-          showCurrencyDropdown();
-        }}
-      >
-        A$ AUD
-      </p>
-      <p
-        onClick={() => {
-          changeCurrency("JPY", "¥");
-          showCurrencyDropdown();
-        }}
-      >
-        ¥ JPY
-      </p>
     </div>
   );
 }
