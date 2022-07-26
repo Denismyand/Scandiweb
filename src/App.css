@@ -17,7 +17,7 @@
   z-index: 5;
 }
 .Header a {
-  font-family: Raleway;
+  font-family: "Raleway";
 }
 .headerLink {
   width: 100px;
@@ -121,11 +121,15 @@
   gap: 50px;
 }
 .product {
+  text-decoration: none;
+  color: #000000;
   position: relative;
   width: 454px;
   height: 600px;
 }
 .outOfStockProduct {
+  text-decoration: none;
+  color: #000000;
   position: relative;
   width: 454px;
   height: 600px;

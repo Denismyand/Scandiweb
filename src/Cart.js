@@ -24,10 +24,7 @@ export function Cart({
                   <hr />
                   <div className={styles.cartItem}>
                     <div className={styles.cartItemInfo}>
-                      <MiniCartItemInfo
-                        cartItem={cartItem}
-                        currency={currency}
-                      />
+                      <CartItemInfo cartItem={cartItem} currency={currency} />
                       <ProductAttributes
                         product={cartItem}
                         handleSelectAttribute={handleSelectAttribute}
@@ -68,7 +65,7 @@ export function Cart({
     </div>
   );
 }
-function MiniCartItemInfo({ cartItem, currency }) {
+function CartItemInfo({ cartItem, currency }) {
   return (
     <>
       <p className={styles.brand}>{cartItem.brand}</p>

@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { Currency } from "./Currency.js";
+import { CategoryPage } from "./CategoryPage.js";
+import { ProductPage } from "./ProductPage.js";
 import { MiniCart } from "./MiniCart.js";
 import { Cart } from "./Cart.js";
 import { useQuery, gql } from "@apollo/client";
-import { Routes, Route, NavLink } from "react-router-dom";
+import { Outlet, Routes, Route, NavLink } from "react-router-dom";
 
 import shopLogo from "./img/logo.svg";
 
@@ -46,9 +48,7 @@ export default function App() {
   const { loading, error, data } = useQuery(Get_Categories);
   const [currency, setCurrency] = useState("USD");
   const [currencySign, setCurrencySign] = useState("$");
-  const [isCurrActive, setIsCurrActive] = useState(false);
   const [cart, setCart] = useState(isCartCached());
-  const [miniCartActive, setMiniCartActive] = useState(false);
 
   function isCartCached() {
     if (localStorage.getItem("cart")) {
@@ -126,8 +126,11 @@ export default function App() {
           if (typeof item.selectedItem === "undefined") {
             similarity.current = false;
           }
+          return null;
         }
+        return null;
       });
+      return null;
     });
     return similarity.current;
   }
@@ -207,19 +210,6 @@ export default function App() {
     );
   }
 
-  function showCurrencyDropdown() {
-    setIsCurrActive(!isCurrActive);
-  }
-
-  function changeCurrency(curr, currSign) {
-    setCurrency(curr);
-    setCurrencySign(currSign);
-  }
-
-  function showMiniCart() {
-    setMiniCartActive(!miniCartActive);
-  }
-
   function handleSelectAttribute(product, attribute, id) {
     let changedProduct = cart.find(
       (cartItem) => cartItem.cartItemId === product.cartItemId
@@ -250,16 +240,15 @@ export default function App() {
     });
     setCart(nextCart);
   }
-
   function setCartItemIds() {
     let nextCart = cart.map((cartItem, i) => {
       return { ...cartItem, cartItemId: i };
     });
     setCart(nextCart);
   }
-
   useEffect(() => {
     setCartItemIds();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cart.length]);
 
   useEffect(() => {
@@ -269,31 +258,27 @@ export default function App() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :</p>;
   return (
-    <div onClick={() => (isCurrActive ? setIsCurrActive(false) : null)}>
-      <Header
-        categories={data.categories}
-        changeCurrency={changeCurrency}
-        currencySign={currencySign}
-        showCurrencyDropdown={showCurrencyDropdown}
-        isCurrActive={isCurrActive}
-        showMiniCart={showMiniCart}
-        getCartQuantity={getCartQuantity}
-      />
-      {miniCartActive ? (
-        <MiniCart
-          showMiniCart={showMiniCart}
-          cart={cart}
-          currency={currency}
-          getCartQuantity={getCartQuantity}
-          getCartTotal={getCartTotal}
-          handleSelectAttribute={handleSelectAttribute}
-          handleProductIsInCart={handleProductIsInCart}
-          handleDecreaseCartQuantity={handleDecreaseCartQuantity}
-        />
-      ) : null}
-      <Routes>
+    <Routes>
+      <Route
+        path="/*"
+        element={
+          <MainOverlay
+            cart={cart}
+            categories={data.categories}
+            currency={currency}
+            setCurrency={setCurrency}
+            currencySign={currencySign}
+            setCurrencySign={setCurrencySign}
+            getCartQuantity={getCartQuantity}
+            getCartTotal={getCartTotal}
+            handleSelectAttribute={handleSelectAttribute}
+            handleProductIsInCart={handleProductIsInCart}
+            handleDecreaseCartQuantity={handleDecreaseCartQuantity}
+          />
+        }
+      >
         <Route
-          path="/*"
+          index
           element={
             <CategoryPage
               category={data.categories[0]}
@@ -305,7 +290,7 @@ export default function App() {
         {data.categories.map((category) => {
           return (
             <Route
-              path={"/" + category.name}
+              path={category.name}
               key={category.name}
               element={
                 <CategoryPage
@@ -317,8 +302,25 @@ export default function App() {
             />
           );
         })}
+        {data.categories.map((category) => {
+          return category.products.map((product) => {
+            return (
+              <Route
+                path={category.name + "/:" + product.id}
+                key={product.id}
+                element={
+                  <ProductPage
+                    product={product}
+                    currency={currency}
+                    handleSelectAttribute={handleSelectAttribute}
+                  />
+                }
+              />
+            );
+          });
+        })}
         <Route
-          path="/cart"
+          path="cart"
           element={
             <Cart
               cart={cart}
@@ -333,12 +335,72 @@ export default function App() {
             />
           }
         />
-      </Routes>
-    </div>
+      </Route>
+    </Routes>
+  );
+}
+
+function MainOverlay({
+  cart,
+  categories,
+  currency,
+  setCurrency,
+  currencySign,
+  setCurrencySign,
+  getCartQuantity,
+  getCartTotal,
+  handleSelectAttribute,
+  handleProductIsInCart,
+  handleDecreaseCartQuantity,
+}) {
+  const [isCurrActive, setIsCurrActive] = useState(false);
+  const [miniCartActive, setMiniCartActive] = useState(false);
+
+  function showCurrencyDropdown() {
+    setIsCurrActive(!isCurrActive);
+  }
+
+  function changeCurrency(curr, currSign) {
+    setCurrency(curr);
+    setCurrencySign(currSign);
+  }
+
+  function showMiniCart() {
+    setMiniCartActive(!miniCartActive);
+  }
+  return (
+    <>
+      <div onClick={() => (isCurrActive ? setIsCurrActive(false) : null)}>
+        <Header
+          cart={cart}
+          categories={categories}
+          changeCurrency={changeCurrency}
+          currencySign={currencySign}
+          showCurrencyDropdown={showCurrencyDropdown}
+          isCurrActive={isCurrActive}
+          showMiniCart={showMiniCart}
+          getCartQuantity={getCartQuantity}
+        />
+        {miniCartActive ? (
+          <MiniCart
+            showMiniCart={showMiniCart}
+            cart={cart}
+            currency={currency}
+            getCartQuantity={getCartQuantity}
+            getCartTotal={getCartTotal}
+            handleSelectAttribute={handleSelectAttribute}
+            handleProductIsInCart={handleProductIsInCart}
+            handleDecreaseCartQuantity={handleDecreaseCartQuantity}
+          />
+        ) : null}
+      </div>
+      <Outlet />
+    </>
   );
 }
 
 function Header({
+  cart,
   categories,
   currencySign,
   changeCurrency,
@@ -370,52 +432,10 @@ function Header({
         isCurrActive={isCurrActive}
       />
       <button className="headerCartButton" onClick={showMiniCart}>
-        <span className="headerCartQuantity">{getCartQuantity()}</span>
+        {cart.length > 0 ? (
+          <span className="headerCartQuantity">{getCartQuantity()}</span>
+        ) : null}
       </button>
-    </div>
-  );
-}
-
-function CategoryPage({ category, currency, handleAddToCart }) {
-  return (
-    <div className="CategoryPage">
-      <h1> Category: {category.name}</h1>
-      <div className="productList">
-        {category.products.map((product) => {
-          return (
-            <div
-              className={product.inStock ? "product" : "outOfStockProduct"}
-              key={product.id}
-            >
-              {product.inStock ? null : (
-                <p className="outOfStockMessage">OUT OF STOCK</p>
-              )}
-              <img
-                className="productImg"
-                src={product.gallery[0]}
-                alt={product.name}
-              />
-              <button
-                className="addToCartButton"
-                onClick={() => handleAddToCart(product)}
-              />
-              <div className="productInfo">
-                <p>{product.name}</p>
-                {product.prices.map((price) => {
-                  if (price.currency.label === currency) {
-                    return (
-                      <p key={price.currency.label}>
-                        <b>{price.currency.symbol + price.amount}</b>
-                      </p>
-                    );
-                  }
-                  return null;
-                })}
-              </div>
-            </div>
-          );
-        })}
-      </div>
     </div>
   );
 }
