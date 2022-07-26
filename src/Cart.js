@@ -9,7 +9,7 @@ export function Cart({
   getCartQuantity,
   getCartTotal,
   handleSelectAttribute,
-  handleAddToCart,
+  handleProductIsInCart,
   handleDecreaseCartQuantity,
 }) {
   return (
@@ -20,7 +20,7 @@ export function Cart({
           <div>
             {cart.map((cartItem) => {
               return (
-                <div key={cartItem.id}>
+                <div key={cartItem.cartItemId}>
                   <hr />
                   <div className={styles.cartItem}>
                     <div className={styles.cartItemInfo}>
@@ -36,7 +36,7 @@ export function Cart({
                     <div className={styles.cartItemQuantity}>
                       <button
                         className={styles.cartIncreaseQtyButton}
-                        onClick={() => handleAddToCart(cartItem)}
+                        onClick={() => handleProductIsInCart(cartItem)}
                       />
                       <p className={styles.cartQtyNumber}>
                         {cartItem.cartQuantity}

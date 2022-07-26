@@ -7,7 +7,7 @@ export function MiniCart({
   currency,
   getCartQuantity,
   handleSelectAttribute,
-  handleAddToCart,
+  handleProductIsInCart,
   handleDecreaseCartQuantity,
   getCartTotal,
 }) {
@@ -19,7 +19,7 @@ export function MiniCart({
           <div>
             {cart.map((cartItem) => {
               return (
-                <div className={styles.miniCartItem} key={cartItem.id}>
+                <div className={styles.miniCartItem} key={cartItem.cartItemId}>
                   <div className={styles.miniCartItemInfo}>
                     <MiniCartItemInfo cartItem={cartItem} currency={currency} />
                     <ProductAttributes
@@ -30,7 +30,7 @@ export function MiniCart({
                   <div className={styles.miniCartItemQuantity}>
                     <button
                       className={styles.miniCartIncreaseQtyButton}
-                      onClick={() => handleAddToCart(cartItem)}
+                      onClick={() => handleProductIsInCart(cartItem)}
                     />
                     <p className={styles.miniCartQtyNumber}>
                       {cartItem.cartQuantity}

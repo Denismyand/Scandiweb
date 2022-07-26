@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { Currency } from "./Currency.js";
 import { MiniCart } from "./MiniCart.js";
@@ -104,70 +104,107 @@ export default function App() {
 
   function handleAddToCart(product) {
     if (cart.length > 0) {
-      let foundInCart = cart.find((cartItem) => cartItem.id === product.id);
+      let foundInCart = cart.find(
+        (cartItem) => cartItem.id === product.id && isSame(cartItem)
+      );
       if (foundInCart) {
-        let nextCart = cart.map((cartItem) => {
-          if (cartItem.id === foundInCart.id) {
-            if (foundInCart.cartQuantity >= maxCartQuantity) {
-              return { ...foundInCart, cartQuantity: Number(maxCartQuantity) };
-            }
-            return {
-              ...foundInCart,
-              cartQuantity: Number(foundInCart.cartQuantity + 1),
-            };
-          }
-          return cartItem;
-        });
-        return setCart(nextCart);
-      } else {
-        let newAttributes = product.attributes.map((attribute) => {
-          let newItems = attribute.items.map((item, i) => {
-            if (i === 0) {
-              return { ...item, selectedItem: true };
-            }
-            return item;
-          });
-          return { ...attribute, items: newItems };
-        });
-        return setCart([
-          ...cart,
-          { ...product, attributes: newAttributes, cartQuantity: 1 },
-        ]);
+        if (isSame(foundInCart)) return handleProductIsInCart(foundInCart);
+        return handleProductIsNotInCart(product);
       }
-    } else {
-      let newAttributes = product.attributes.map((attribute) => {
-        let newItems = attribute.items.map((item, i) => {
-          if (i === 0) {
-            return { ...item, selectedItem: true };
-          }
-          return item;
-        });
-        return { ...attribute, items: newItems };
-      });
-      return setCart([
-        {
-          ...product,
-          attributes: newAttributes,
-          cartQuantity: 1,
-        },
-      ]);
+      return handleProductIsNotInCart(product);
     }
+    return handleCartIsEmpty(product);
+  }
+
+  const similarity = useRef(true);
+
+  function isSame(foundInCart) {
+    similarity.current = true;
+    foundInCart.attributes.map((attribute) => {
+      attribute.items.map((item, itemIndex) => {
+        if (itemIndex === 0) {
+          if (typeof item.selectedItem === "undefined") {
+            similarity.current = false;
+          }
+        }
+      });
+    });
+    return similarity.current;
+  }
+
+  function handleProductIsInCart(foundInCart) {
+    let nextCart = cart.map((cartItem) => {
+      if (cartItem.cartItemId === foundInCart.cartItemId) {
+        if (foundInCart.cartQuantity >= maxCartQuantity) {
+          return { ...foundInCart, cartQuantity: Number(maxCartQuantity) };
+        }
+        return {
+          ...foundInCart,
+          cartQuantity: Number(foundInCart.cartQuantity + 1),
+        };
+      }
+      return cartItem;
+    });
+    return setCart(nextCart);
+  }
+
+  function handleProductIsNotInCart(product) {
+    let newAttributes = product.attributes.map((attribute) => {
+      let newItems = attribute.items.map((item, i) => {
+        if (i === 0) {
+          return { ...item, selectedItem: true };
+        }
+        return item;
+      });
+      return { ...attribute, items: newItems };
+    });
+    return setCart([
+      ...cart,
+      {
+        ...product,
+        attributes: newAttributes,
+        cartItemId: 999,
+        cartQuantity: 1,
+      },
+    ]);
+  }
+
+  function handleCartIsEmpty(product) {
+    let newAttributes = product.attributes.map((attribute) => {
+      let newItems = attribute.items.map((item, i) => {
+        if (i === 0) {
+          return { ...item, selectedItem: true };
+        }
+        return item;
+      });
+      return { ...attribute, items: newItems };
+    });
+    return setCart([
+      {
+        ...product,
+        attributes: newAttributes,
+        cartItemId: 999,
+        cartQuantity: 1,
+      },
+    ]);
   }
 
   function handleDecreaseCartQuantity(product) {
     if (product.cartQuantity > 1) {
-      let decreased = cart.map((item) => {
-        if (item.id === product.id) {
+      let decreased = cart.map((cartItem) => {
+        if (cartItem.cartItemId === product.cartItemId) {
           return {
-            ...item,
-            cartQuantity: Number(item.cartQuantity) - 1,
+            ...cartItem,
+            cartQuantity: Number(cartItem.cartQuantity) - 1,
           };
         }
-        return item;
+        return cartItem;
       });
       return setCart(decreased);
     }
-    return setCart(cart.filter((item) => item.id !== product.id));
+    return setCart(
+      cart.filter((cartItem) => cartItem.cartItemId !== product.cartItemId)
+    );
   }
 
   function showCurrencyDropdown() {
@@ -184,9 +221,11 @@ export default function App() {
   }
 
   function handleSelectAttribute(product, attribute, id) {
-    let changedProduct = cart.find((cartItem) => cartItem.id === product.id);
+    let changedProduct = cart.find(
+      (cartItem) => cartItem.cartItemId === product.cartItemId
+    );
     let nextCart = cart.map((cartItem) => {
-      if (cartItem.id !== changedProduct.id) {
+      if (cartItem.cartItemId !== changedProduct.cartItemId) {
         return cartItem;
       }
       let nextAttribute = cartItem.attributes.map((foundAttribute) => {
@@ -211,6 +250,17 @@ export default function App() {
     });
     setCart(nextCart);
   }
+
+  function setCartItemIds() {
+    let nextCart = cart.map((cartItem, i) => {
+      return { ...cartItem, cartItemId: i };
+    });
+    setCart(nextCart);
+  }
+
+  useEffect(() => {
+    setCartItemIds();
+  }, [cart.length]);
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -237,7 +287,7 @@ export default function App() {
           getCartQuantity={getCartQuantity}
           getCartTotal={getCartTotal}
           handleSelectAttribute={handleSelectAttribute}
-          handleAddToCart={handleAddToCart}
+          handleProductIsInCart={handleProductIsInCart}
           handleDecreaseCartQuantity={handleDecreaseCartQuantity}
         />
       ) : null}
@@ -278,7 +328,7 @@ export default function App() {
               getCartQuantity={getCartQuantity}
               getCartTotal={getCartTotal}
               handleSelectAttribute={handleSelectAttribute}
-              handleAddToCart={handleAddToCart}
+              handleProductIsInCart={handleProductIsInCart}
               handleDecreaseCartQuantity={handleDecreaseCartQuantity}
             />
           }
