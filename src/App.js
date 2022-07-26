@@ -103,23 +103,55 @@ export default function App() {
   const maxCartQuantity = 5;
 
   function handleAddToCart(product) {
-    let foundInCart = cart.find((cartItem) => cartItem.id === product.id);
-    if (foundInCart) {
-      let nextCart = cart.map((cartItem) => {
-        if (cartItem.id === foundInCart.id) {
-          if (foundInCart.cartQuantity >= maxCartQuantity) {
-            return { ...foundInCart, cartQuantity: Number(maxCartQuantity) };
+    if (cart.length > 0) {
+      let foundInCart = cart.find((cartItem) => cartItem.id === product.id);
+      if (foundInCart) {
+        let nextCart = cart.map((cartItem) => {
+          if (cartItem.id === foundInCart.id) {
+            if (foundInCart.cartQuantity >= maxCartQuantity) {
+              return { ...foundInCart, cartQuantity: Number(maxCartQuantity) };
+            }
+            return {
+              ...foundInCart,
+              cartQuantity: Number(foundInCart.cartQuantity + 1),
+            };
           }
-          return {
-            ...foundInCart,
-            cartQuantity: Number(foundInCart.cartQuantity + 1),
-          };
-        }
-        return cartItem;
+          return cartItem;
+        });
+        return setCart(nextCart);
+      } else {
+        let newAttributes = product.attributes.map((attribute) => {
+          let newItems = attribute.items.map((item, i) => {
+            if (i === 0) {
+              return { ...item, selectedItem: true };
+            }
+            return item;
+          });
+          return { ...attribute, items: newItems };
+        });
+        return setCart([
+          ...cart,
+          { ...product, attributes: newAttributes, cartQuantity: 1 },
+        ]);
+      }
+    } else {
+      let newAttributes = product.attributes.map((attribute) => {
+        let newItems = attribute.items.map((item, i) => {
+          if (i === 0) {
+            return { ...item, selectedItem: true };
+          }
+          return item;
+        });
+        return { ...attribute, items: newItems };
       });
-      return setCart(nextCart);
+      return setCart([
+        {
+          ...product,
+          attributes: newAttributes,
+          cartQuantity: 1,
+        },
+      ]);
     }
-    setCart([...cart, { ...product, cartQuantity: 1 }]);
   }
 
   function handleDecreaseCartQuantity(product) {
@@ -150,24 +182,6 @@ export default function App() {
   function showMiniCart() {
     setMiniCartActive(!miniCartActive);
   }
-
-  // function selectFirstAttributes(product) {
-  //   let newProduct = cart.find((cartItem) => cartItem.id === product.id);
-  //   let nextCart = cart.map((cartItem) => {
-  //     if (cartItem.id !== newProduct.id) {
-  //       return cartItem;
-  //     }
-  //     let newAttributes = cartItem.attributes.map((attribute) => {
-  //       return (attribute.items.items[0] = {
-  //         ...attribute.items.items[0],
-  //         selectedItem: true,
-  //       });
-  //       //  {...attribute, items: [...attribute.items, changedItem:{...attribute.items.items[0], selectedItem: true}]};
-  //     });
-  //     return { ...cartItem, attributes: newAttributes };
-  //   });
-  //   setCart(nextCart);
-  // }
 
   function handleSelectAttribute(product, attribute, id) {
     let changedProduct = cart.find((cartItem) => cartItem.id === product.id);
@@ -313,9 +327,6 @@ function Header({
 }
 
 function CategoryPage({ category, currency, handleAddToCart }) {
-  function handleAddToCartClick(product) {
-    handleAddToCart(product);
-  }
   return (
     <div className="CategoryPage">
       <h1> Category: {category.name}</h1>
@@ -336,7 +347,7 @@ function CategoryPage({ category, currency, handleAddToCart }) {
               />
               <button
                 className="addToCartButton"
-                onClick={() => handleAddToCartClick(product)}
+                onClick={() => handleAddToCart(product)}
               />
               <div className="productInfo">
                 <p>{product.name}</p>
