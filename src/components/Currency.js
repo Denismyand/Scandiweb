@@ -1,5 +1,5 @@
-import arrowDown from "./img/down-arrow.svg";
-import arrowUp from "./img/up-arrow.svg";
+import arrowDown from "../img/down-arrow.svg";
+import arrowUp from "../img/up-arrow.svg";
 
 export function Currency({
   currencySign,

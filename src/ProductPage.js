@@ -1,7 +1,13 @@
-import styles from "./productpage.module.css";
-import { useState } from "react";
+import styles from "./styles/productpage.module.css";
+import { useState, useRef } from "react";
 
-export function ProductPage({ product, currency }) {
+export function ProductPage({
+  cart,
+  setCart,
+  product,
+  currency,
+  handleProductIsInCart,
+}) {
   const [currImg, setCurrImg] = useState(0);
   const [attributes, setAttributes] = useState(getInitialAttributes());
 
@@ -19,6 +25,58 @@ export function ProductPage({ product, currency }) {
       return { index: itemIndex };
     });
     setAttributes(newAttributes);
+  }
+
+  function handleAddToCart(product) {
+    if (cart.length > 0) {
+      let foundInCart = cart.find(
+        (cartItem) => cartItem.id === product.id && isSame(cartItem)
+      );
+      if (foundInCart) {
+        if (isSame(foundInCart)) return handleProductIsInCart(foundInCart);
+      }
+    }
+    return handleProductIsNotInCart(product);
+  }
+
+  const similarity = useRef(true);
+
+  function isSame(foundInCart) {
+    similarity.current = true;
+    foundInCart.attributes.map((attribute, i) => {
+      attribute.items.map((item, itemIndex) => {
+        if (itemIndex === attributes[i].index) {
+          if (typeof item.selectedItem === "undefined") {
+            similarity.current = false;
+          }
+          return null;
+        }
+        return null;
+      });
+      return null;
+    });
+    return similarity.current;
+  }
+
+  function handleProductIsNotInCart(product) {
+    let newAttributes = product.attributes.map((attribute, i) => {
+      let newItems = attribute.items.map((item, index) => {
+        if (index === attributes[i].index) {
+          return { ...item, selectedItem: true };
+        }
+        return item;
+      });
+      return { ...attribute, items: newItems };
+    });
+    return setCart([
+      ...cart,
+      {
+        ...product,
+        attributes: newAttributes,
+        cartItemId: 999,
+        cartQuantity: 1,
+      },
+    ]);
   }
 
   function changeImage(imgIndex) {
@@ -53,13 +111,20 @@ export function ProductPage({ product, currency }) {
           currency={currency}
           attributes={attributes}
           preDefineAttributes={preDefineAttributes}
+          handleAddToCart={handleAddToCart}
         />
       </div>
     </div>
   );
 }
 
-function ProductInfo({ product, currency, attributes, preDefineAttributes }) {
+function ProductInfo({
+  product,
+  currency,
+  attributes,
+  preDefineAttributes,
+  handleAddToCart,
+}) {
   return (
     <>
       <p className={styles.brand}>{product.brand}</p>
@@ -92,6 +157,7 @@ function ProductInfo({ product, currency, attributes, preDefineAttributes }) {
             ? styles.addToCartButton
             : styles.addToCartButtonDisabled
         }
+        onClick={() => handleAddToCart(product)}
       >
         ADD TO CART
       </button>

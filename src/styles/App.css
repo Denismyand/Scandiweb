@@ -87,7 +87,7 @@
   width: 60px;
   height: 60px;
   padding: 22px 10px;
-  background: url(./img/cartdark.svg) no-repeat center;
+  background: url(../img/cartdark.svg) no-repeat center;
   position: absolute;
   top: 0;
   right: 11%;
@@ -164,7 +164,7 @@
   position: absolute;
   bottom: 85px;
   right: 25px;
-  background: url(./img/cart.svg) no-repeat center;
+  background: url(../img/cart.svg) no-repeat center;
   border: 0;
   background-color: #5ece7b;
   color: #ffffff;

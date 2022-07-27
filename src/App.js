@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import "./App.css";
-import { Currency } from "./Currency.js";
-import { CategoryPage } from "./CategoryPage.js";
+import "./styles/App.css";
+import { Currency } from "./components/Currency.js";
+import { CategoryPage } from "./components/CategoryPage.js";
 import { ProductPage } from "./ProductPage.js";
 import { MiniCart } from "./MiniCart.js";
 import { Cart } from "./Cart.js";
@@ -109,11 +109,9 @@ export default function App() {
       );
       if (foundInCart) {
         if (isSame(foundInCart)) return handleProductIsInCart(foundInCart);
-        return handleProductIsNotInCart(product);
       }
-      return handleProductIsNotInCart(product);
     }
-    return handleCartIsEmpty(product);
+    return handleProductIsNotInCart(product);
   }
 
   const similarity = useRef(true);
@@ -163,26 +161,6 @@ export default function App() {
     });
     return setCart([
       ...cart,
-      {
-        ...product,
-        attributes: newAttributes,
-        cartItemId: 999,
-        cartQuantity: 1,
-      },
-    ]);
-  }
-
-  function handleCartIsEmpty(product) {
-    let newAttributes = product.attributes.map((attribute) => {
-      let newItems = attribute.items.map((item, i) => {
-        if (i === 0) {
-          return { ...item, selectedItem: true };
-        }
-        return item;
-      });
-      return { ...attribute, items: newItems };
-    });
-    return setCart([
       {
         ...product,
         attributes: newAttributes,
@@ -310,9 +288,11 @@ export default function App() {
                 key={product.id}
                 element={
                   <ProductPage
+                    cart={cart}
+                    setCart={setCart}
                     product={product}
                     currency={currency}
-                    handleSelectAttribute={handleSelectAttribute}
+                    handleProductIsInCart={handleProductIsInCart}
                   />
                 }
               />

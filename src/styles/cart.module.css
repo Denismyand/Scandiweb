@@ -45,7 +45,7 @@ hr {
 }
 
 .cartIncreaseQtyButton {
-  background: url(./img/increase.svg) no-repeat center;
+  background: url(../img/increase.svg) no-repeat center;
   position: absolute;
   top: 0;
   right: 0;
@@ -72,7 +72,7 @@ hr {
 }
 
 .cartDecreaseQtyButton {
-  background: url(./img/decrease.svg) no-repeat center;
+  background: url(../img/decrease.svg) no-repeat center;
   position: absolute;
   bottom: 0;
   right: 0;
@@ -99,7 +99,7 @@ hr {
   bottom: 50px;
   right: 60px;
   border: 0;
-  background: url(./img/prev.svg) no-repeat center;
+  background: url(../img/prev.svg) no-repeat center;
   background-color: rgba(0, 0, 0, 0.6);
   width: 24px;
   height: 24px;
@@ -115,7 +115,7 @@ hr {
   bottom: 50px;
   right: 30px;
   border: 0;
-  background: url(./img/next.svg) no-repeat center;
+  background: url(../img/next.svg) no-repeat center;
   background-color: rgba(0, 0, 0, 0.6);
   width: 24px;
   height: 24px;

@@ -1,4 +1,4 @@
-import styles from "./cart.module.css";
+import styles from "./styles/cart.module.css";
 import { useState } from "react";
 
 export function Cart({
