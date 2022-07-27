@@ -1,119 +1,113 @@
 import styles from "./productpage.module.css";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 
-export function ProductPage({ product, currency, handleSelectAttribute }) {
+export function ProductPage({ product, currency }) {
   const [currImg, setCurrImg] = useState(0);
+  const [attributes, setAttributes] = useState(getInitialAttributes());
 
-  const imgToScrollTo = useRef(null);
+  function getInitialAttributes() {
+    let begin = [];
+    for (let i = 0; i < product.attributes.length; i++) {
+      begin.push({ index: 0 });
+    }
+    return begin;
+  }
 
   function changeImage(imgIndex) {
     setCurrImg(imgIndex);
   }
 
-  function prevImg() {
-    if (currImg > 0) setCurrImg(currImg - 1);
-  }
-
-  function nextImg() {
-    if (currImg < product.gallery.length - 1) setCurrImg(currImg + 1);
-  }
-
-  useEffect(() => {
-    imgToScrollTo.current.scrollIntoView({ block: "center" });
-  }, [currImg]);
-
   return (
     <div className={styles.ProductPage}>
-      <div className={styles.productMiniPicsContainer}>
-        {product.gallery.length < 5 ? null : (
-          <button
-            className={styles.prevPic}
-            onClick={prevImg}
-            disabled={currImg < 1}
-          />
-        )}
-        <div className={styles.productMiniPics}>
-          {product.gallery.map((pic, index) => {
-            return (
-              <img
-                className={
-                  currImg === index ? styles.activeImage : styles.inActiveImage
-                }
-                onClick={() => changeImage(index)}
-                src={pic}
-                ref={currImg === index ? imgToScrollTo : null}
-                alt=""
-                key={pic}
-              />
-            );
-          })}
-        </div>
-        {product.gallery.length < 5 ? null : (
-          <button
-            className={styles.nextPic}
-            onClick={nextImg}
-            disabled={currImg >= product.gallery.length - 1}
-          />
-        )}
+      <div className={styles.productMiniPics}>
+        {product.gallery.map((pic, index) => {
+          return (
+            <img
+              className={
+                currImg === index ? styles.activeImage : styles.inActiveImage
+              }
+              onClick={() => changeImage(index)}
+              src={pic}
+              alt=""
+              key={pic}
+            />
+          );
+        })}
       </div>
       <img
         className={styles.productPicture}
         src={product.gallery[currImg]}
         alt=""
       />
-      <div className={styles.productInfo}>
+      <div className={styles.ProductInfo}>
         <ProductInfo
           product={product}
           currency={currency}
-          handleSelectAttribute={handleSelectAttribute}
+          attributes={attributes}
+          setAttributes={setAttributes}
         />
       </div>
     </div>
   );
 }
 
-function ProductInfo({ product, currency, handleSelectAttribute }) {
+function ProductInfo({ product, currency, attributes, setAttributes }) {
   return (
     <>
       <p className={styles.brand}>{product.brand}</p>
       <p className={styles.productName}>{product.name}</p>
       <ProductAttributes
         product={product}
-        handleSelectAttribute={handleSelectAttribute}
+        attributes={attributes}
+        setAttributes={setAttributes}
       />
       {product.prices.map((price) => {
         if (price.currency.label === currency) {
           return (
-            <p key={price.currency.label} className={styles.productPrice}>
-              {price.currency.symbol + price.amount}
-            </p>
+            <div key={price.currency.label} className={styles.productPrice}>
+              <p>PRICE:</p>
+              <p>{price.currency.symbol + price.amount}</p>
+            </div>
           );
         }
         return null;
       })}
-      <button disabled={!product.inStock}>Add to cart</button>
-      <div dangerouslySetInnerHTML={{ __html: product.description }} />
+      <button disabled={!product.inStock} className={styles.addToCartButton}>
+        Add to cart
+      </button>
+      <div
+        className={styles.productDescription}
+        dangerouslySetInnerHTML={{ __html: product.description }}
+      />
     </>
   );
 }
 
-function ProductAttributes({ product, handleSelectAttribute }) {
-  function differAttributes(attribute) {
+function ProductAttributes({ product, attributes, setAttributes }) {
+  function preDefineAttributes(attributeIndex, itemIndex) {
+    let newAttributes = attributes.map((attribute, i) => {
+      if (i !== attributeIndex) return attribute;
+      return { index: itemIndex };
+    });
+    setAttributes(newAttributes);
+  }
+
+  function differAttributes(attribute, i) {
     if (attribute.type === "text") {
       return (
         <>
           <p className={styles.attributeName}>
             {attribute.name.toUpperCase()}:
           </p>
-          {attribute.items.map((item) => (
+          {attribute.items.map((item, index) => (
             <button
               className={
-                item.selectedItem
+                index === attributes[i].index
                   ? styles.activeTextAttributeSelectButton
                   : styles.textAttributeSelectButton
               }
               key={item.id}
-              onClick={() => handleSelectAttribute(product, attribute, item.id)}
+              onClick={() => preDefineAttributes(i, index)}
             >
               {item.value}
             </button>
@@ -128,11 +122,11 @@ function ProductAttributes({ product, handleSelectAttribute }) {
           <p className={styles.attributeName}>
             {attribute.name.toUpperCase()}:
           </p>
-          {attribute.items.map((item) => {
+          {attribute.items.map((item, index) => {
             return (
               <button
                 className={
-                  item.selectedItem
+                  index === attributes[i].index
                     ? styles.activeSwatchAttributeSelectButton
                     : styles.swatchAttributeSelectButton
                 }
@@ -140,9 +134,7 @@ function ProductAttributes({ product, handleSelectAttribute }) {
                 style={{
                   backgroundColor: `${item.value}`,
                 }}
-                onClick={() =>
-                  handleSelectAttribute(product, attribute, item.id)
-                }
+                onClick={() => preDefineAttributes(i, index)}
               />
             );
           })}
@@ -151,8 +143,8 @@ function ProductAttributes({ product, handleSelectAttribute }) {
   }
   return (
     <>
-      {product.attributes.map((attribute) => {
-        return <div key={attribute.id}>{differAttributes(attribute)}</div>;
+      {product.attributes.map((attribute, i) => {
+        return <div key={attribute.id}>{differAttributes(attribute, i)}</div>;
       })}
     </>
   );

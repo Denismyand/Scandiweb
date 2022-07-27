@@ -2,69 +2,103 @@
   display: flex;
   padding: 100px 10% 50px;
 }
-.productMiniPicsContainer {
-  position: relative;
-  height: 730px;
-}
-.prevPic {
-  position: absolute;
-  top: -45px;
-  width: 80px;
-  height: 40px;
-  margin: 0 10px;
-  border: 0;
-  background: url(./img/prev_pic.svg) no-repeat center;
-}
-.prevPic:hover {
-  background-color: #eeeeee;
-}
-.prevPic:active {
-  background-color: #dddddd;
-}
-.prevPic:disabled {
-  opacity: 0.3;
-}
-.nextPic {
-  width: 80px;
-  height: 40px;
-  margin: 0 10px;
-  border: 0;
-  background: url(./img/next_pic.svg) no-repeat center;
-}
-.nextPic:hover {
-  background-color: #eeeeee;
-}
-.nextPic:active {
-  background-color: #dddddd;
-}
-.nextPic:disabled {
-  opacity: 0.3;
-}
-
 .productMiniPics {
-  padding: 5px 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5px 10px;
+  gap: 5px;
   width: 100px;
-  height: 650px;
-  overflow: hidden;
+  height: 100%;
 }
 .inActiveImage {
-  margin: 3px 10px;
   width: 80px;
 }
 .inActiveImage:hover {
-  box-shadow: 0 0 0 4px #ffffff, 0 0 0 5px #1d1f22;
+  outline: 2px solid #1d1f22;
 }
-
 .activeImage {
-  margin: 3px 10px;
   width: 80px;
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #5ece7b;
+  outline: 2px solid #5ece7b;
 }
 .productPicture {
   width: 500px;
   height: 650px;
-  padding: 0 30px;
+  padding: 5px 30px;
 }
-.productInfo {
-  padding: 0 30px;
+.ProductInfo {
+  padding: 5px 30px;
+}
+.brand {
+}
+.productName {
+}
+.productPrice {
+  padding-top: 15px;
+  font-weight: 700;
+  font-size: 20px;
+}
+.productPrice p {
+  padding-bottom: 15px;
+}
+.addToCartButton {
+}
+.addToCartButton:hover {
+}
+.addToCartButton:active {
+}
+.addToCartButton:disabled {
+}
+.productDescription {
+}
+.attributeName {
+  padding-top: 10px;
+  font-weight: 700;
+}
+.textAttributeSelectButton {
+  width: 60px;
+  height: 45px;
+  margin: 10px 10px 10px 0;
+  font-family: "Source Sans Pro";
+  font-size: 18px;
+  font-weight: 200;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+.textAttributeSelectButton:hover {
+  background-color: #eeeeee;
+}
+.textAttributeSelectButton:active {
+  background-color: #dddddd;
+}
+.activeTextAttributeSelectButton {
+  width: 60px;
+  height: 45px;
+  margin: 10px 10px 10px 0;
+  font-family: "Source Sans Pro";
+  font-size: 18px;
+  font-weight: 200;
+  background-color: #1d1f22;
+  color: #ffffff;
+  cursor: pointer;
+}
+.swatchAttributeSelectButton {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  margin: 10px 10px 10px 0;
+  cursor: pointer;
+}
+.swatchAttributeSelectButton:hover {
+  box-shadow: 0 0 0 4px #ffffff, 0 0 0 5px #1d1f22;
+}
+
+.activeSwatchAttributeSelectButton {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  margin: 10px 10px 10px 0;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #5ece7b;
+  cursor: pointer;
 }
