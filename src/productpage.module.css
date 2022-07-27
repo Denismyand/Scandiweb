@@ -16,53 +16,94 @@
   width: 80px;
 }
 .inActiveImage:hover {
-  outline: 2px solid #1d1f22;
+  cursor: pointer;
+  outline: 1px solid #1d1f22;
 }
 .activeImage {
   width: 80px;
-  outline: 2px solid #5ece7b;
+  outline: 1px solid #5ece7b;
 }
 .productPicture {
-  width: 500px;
-  height: 650px;
+  width: 700px;
   padding: 5px 30px;
 }
 .ProductInfo {
   padding: 5px 30px;
 }
 .brand {
+  font-size: 30px;
+  font-weight: 600;
 }
 .productName {
+  padding: 10px 0 30px;
+  font-size: 30px;
+  font-weight: 400;
 }
 .productPrice {
   padding-top: 15px;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 18px;
 }
 .productPrice p {
   padding-bottom: 15px;
 }
+.productPriceAmount {
+  font-size: 24px;
+}
+.productIsOutOfStock {
+  position: relative;
+  top: 10px;
+  font-size: 10px;
+  color: red;
+}
 .addToCartButton {
+  margin: 15px 0 30px;
+  width: 280px;
+  height: 50px;
+  border: 0;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #5ece7b;
+  color: #ffffff;
+  cursor: pointer;
 }
 .addToCartButton:hover {
+  background-color: #16994f;
 }
 .addToCartButton:active {
+  background-color: #118342;
 }
-.addToCartButton:disabled {
+.addToCartButtonDisabled {
+  margin: 15px 0 30px;
+  width: 280px;
+  height: 50px;
+  border: 0;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #5ece7b;
+  color: #ffffff;
+  cursor: not-allowed;
+  opacity: 0.3;
 }
 .productDescription {
+  font-size: 16px;
+  font-weight: 400;
+  font-family: "Roboto";
 }
 .attributeName {
   padding-top: 10px;
+  font-size: 18px;
   font-weight: 700;
+  font-family: "Roboto Condensed";
 }
 .textAttributeSelectButton {
   width: 60px;
   height: 45px;
   margin: 10px 10px 10px 0;
   font-family: "Source Sans Pro";
-  font-size: 18px;
-  font-weight: 200;
+  font-size: 16px;
+  font-weight: 400;
+  border: 1px solid #1d1f22;
   background-color: #ffffff;
   cursor: pointer;
 }
@@ -77,8 +118,8 @@
   height: 45px;
   margin: 10px 10px 10px 0;
   font-family: "Source Sans Pro";
-  font-size: 18px;
-  font-weight: 200;
+  font-size: 16px;
+  font-weight: 400;
   background-color: #1d1f22;
   color: #ffffff;
   cursor: pointer;
@@ -88,10 +129,11 @@
   height: 30px;
   border: 0;
   margin: 10px 10px 10px 0;
+  border: 1px solid #1d1f22;
   cursor: pointer;
 }
 .swatchAttributeSelectButton:hover {
-  box-shadow: 0 0 0 4px #ffffff, 0 0 0 5px #1d1f22;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px #1d1f22;
 }
 
 .activeSwatchAttributeSelectButton {
@@ -99,6 +141,7 @@
   height: 30px;
   border: 0;
   margin: 10px 10px 10px 0;
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #5ece7b;
+  border: 1px solid #1d1f22;
+  box-shadow: 0 0 0 1px #ffffff, 0 0 0 3px #5ece7b;
   cursor: pointer;
 }

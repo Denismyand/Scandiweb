@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  color: #1d1f22;
 }
 
 .Header {
@@ -25,14 +26,16 @@
   background-color: inherit;
   text-align: center;
   text-decoration: none;
-  color: #000000;
-  padding: 16px;
-  font-size: 18px;
+  color: #1d1f22;
+  padding-top: 16px;
+  font-size: 16px;
+  font-weight: 500;
   border: none;
   cursor: pointer;
   margin-right: 10px;
 }
 .activeLink {
+  font-weight: 600;
   color: #33e22d;
   border-bottom: 1px solid #33e22d;
 }
@@ -52,9 +55,10 @@
   width: 60px;
   height: 60px;
   background-color: inherit;
-  color: #000000;
+  color: #1d1f22;
   padding: 22px 10px;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 500;
   border: none;
   cursor: pointer;
 }
@@ -100,7 +104,7 @@
   right: 8px;
   width: 20px;
   height: 20px;
-  background-color: #000000;
+  background-color: #1d1f22;
   color: #ffffff;
   border-radius: 50%;
 }
@@ -109,10 +113,11 @@
   display: flex;
   flex-direction: column;
   gap: 30px;
-  font-family: "Raleway";
 }
 .CategoryPage h1 {
-  padding: 50px 0;
+  font-size: 42px;
+  font-weight: 400;
+  padding: 50px 0 70px;
 }
 .productList {
   display: flex;
@@ -122,14 +127,14 @@
 }
 .product {
   text-decoration: none;
-  color: #000000;
+  color: #1d1f22;
   position: relative;
   width: 454px;
   height: 600px;
 }
 .outOfStockProduct {
   text-decoration: none;
-  color: #000000;
+  color: #1d1f22;
   position: relative;
   width: 454px;
   height: 600px;
@@ -140,7 +145,7 @@
   position: absolute;
   font-size: 24px;
   font-weight: 400;
-  color: #000000;
+  color: #1d1f22;
   top: 40%;
   left: 30%;
   color: #676869;
@@ -157,8 +162,8 @@
 .addToCartButton {
   visibility: hidden;
   position: absolute;
-  bottom: 75px;
-  right: 10px;
+  bottom: 85px;
+  right: 25px;
   background: url(./img/cart.svg) no-repeat center;
   border: 0;
   background-color: #5ece7b;
@@ -181,11 +186,15 @@
   width: 454px;
   height: 500px;
   overflow: hidden;
-}
-.productInfo {
-  font-size: 20px;
   padding: 10px;
 }
+.productInfo {
+  font-size: 18px;
+  font-weight: 300;
+}
 .productInfo p {
-  font-family: Raleway;
+  padding: 10px 10px 0;
+}
+.price {
+  font-weight: 500;
 }

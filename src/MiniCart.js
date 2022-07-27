@@ -15,7 +15,9 @@ export function MiniCart({
     <div className={styles.MiniCart}>
       {cart.length > 0 ? (
         <>
-          <b>My cart.</b> <span>{getCartQuantity()} items</span>
+          <p className={styles.miniCartItemsQuantity}>
+            <b>My Cart,</b> <span>{getCartQuantity()} items</span>
+          </p>
           <div>
             {cart.map((cartItem) => {
               return (
@@ -67,13 +69,13 @@ export function MiniCart({
 function MiniCartItemInfo({ cartItem, currency }) {
   return (
     <>
-      <p>{cartItem.brand}</p>
-      <p>{cartItem.name}</p>
+      <p className={styles.miniCartItemName}>{cartItem.brand}</p>
+      <p className={styles.miniCartItemName}>{cartItem.name}</p>
       {cartItem.prices.map((price) => {
         if (price.currency.label === currency) {
           return (
-            <p key={price.currency.label}>
-              <b>{price.currency.symbol + price.amount}</b>
+            <p key={price.currency.label} className={styles.miniCartItemPrice}>
+              {price.currency.symbol + price.amount}
             </p>
           );
         }
@@ -88,7 +90,7 @@ function ProductAttributes({ product, handleSelectAttribute }) {
     if (attribute.type === "text") {
       return (
         <>
-          <p>{attribute.name}:</p>
+          <p className={styles.attributeName}>{attribute.name}:</p>
           {attribute.items.map((item) => (
             <button
               className={
@@ -99,7 +101,7 @@ function ProductAttributes({ product, handleSelectAttribute }) {
               key={item.id}
               onClick={() => handleSelectAttribute(product, attribute, item.id)}
             >
-              <b> {item.value}</b>
+              {item.value}
             </button>
           ))}
         </>
@@ -109,7 +111,7 @@ function ProductAttributes({ product, handleSelectAttribute }) {
     if (attribute.type === "swatch")
       return (
         <>
-          <p>{attribute.name}:</p>
+          <p className={styles.attributeName}>{attribute.name}:</p>
           {attribute.items.map((item) => {
             return (
               <button

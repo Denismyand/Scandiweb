@@ -13,6 +13,14 @@ export function ProductPage({ product, currency }) {
     return begin;
   }
 
+  function preDefineAttributes(attributeIndex, itemIndex) {
+    let newAttributes = attributes.map((attribute, i) => {
+      if (i !== attributeIndex) return attribute;
+      return { index: itemIndex };
+    });
+    setAttributes(newAttributes);
+  }
+
   function changeImage(imgIndex) {
     setCurrImg(imgIndex);
   }
@@ -44,14 +52,14 @@ export function ProductPage({ product, currency }) {
           product={product}
           currency={currency}
           attributes={attributes}
-          setAttributes={setAttributes}
+          preDefineAttributes={preDefineAttributes}
         />
       </div>
     </div>
   );
 }
 
-function ProductInfo({ product, currency, attributes, setAttributes }) {
+function ProductInfo({ product, currency, attributes, preDefineAttributes }) {
   return (
     <>
       <p className={styles.brand}>{product.brand}</p>
@@ -59,21 +67,33 @@ function ProductInfo({ product, currency, attributes, setAttributes }) {
       <ProductAttributes
         product={product}
         attributes={attributes}
-        setAttributes={setAttributes}
+        preDefineAttributes={preDefineAttributes}
       />
       {product.prices.map((price) => {
         if (price.currency.label === currency) {
           return (
             <div key={price.currency.label} className={styles.productPrice}>
               <p>PRICE:</p>
-              <p>{price.currency.symbol + price.amount}</p>
+              <p className={styles.productPriceAmount}>
+                {price.currency.symbol + price.amount}
+              </p>
             </div>
           );
         }
         return null;
       })}
-      <button disabled={!product.inStock} className={styles.addToCartButton}>
-        Add to cart
+      {!product.inStock ? (
+        <p className={styles.productIsOutOfStock}>Item is out of stock</p>
+      ) : null}
+      <button
+        disabled={!product.inStock}
+        className={
+          product.inStock
+            ? styles.addToCartButton
+            : styles.addToCartButtonDisabled
+        }
+      >
+        ADD TO CART
       </button>
       <div
         className={styles.productDescription}
@@ -83,15 +103,7 @@ function ProductInfo({ product, currency, attributes, setAttributes }) {
   );
 }
 
-function ProductAttributes({ product, attributes, setAttributes }) {
-  function preDefineAttributes(attributeIndex, itemIndex) {
-    let newAttributes = attributes.map((attribute, i) => {
-      if (i !== attributeIndex) return attribute;
-      return { index: itemIndex };
-    });
-    setAttributes(newAttributes);
-  }
-
+function ProductAttributes({ product, attributes, preDefineAttributes }) {
   function differAttributes(attribute, i) {
     if (attribute.type === "text") {
       return (

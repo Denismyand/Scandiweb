@@ -34,7 +34,9 @@ export function CategoryPage({ category, currency, handleAddToCart }) {
                     if (price.currency.label === currency) {
                       return (
                         <p key={price.currency.label}>
-                          <b>{price.currency.symbol + price.amount}</b>
+                          <b className="price">
+                            {price.currency.symbol + price.amount}
+                          </b>
                         </p>
                       );
                     }
