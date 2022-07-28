@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default function App() {
   const { loading, error, data } = useQuery(getProducts);
+  const [isCurrActive, setIsCurrActive] = useState(false);
   const [currency, setCurrency] = useState({
     label: "USD",
     sign: "$",
@@ -22,6 +23,10 @@ export default function App() {
       return JSON.parse(localStorage.getItem("cart"));
     }
     return [];
+  }
+
+  function showCurrencyDropdown() {
+    setIsCurrActive(!isCurrActive);
   }
 
   function getCartQuantity() {
@@ -169,73 +174,77 @@ export default function App() {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :</p>;
   return (
-    <Routes>
-      <Route
-        path="/*"
-        element={
-          <MainOverlay
-            cart={cart}
-            categories={data.categories}
-            currency={currency}
-            setCurrency={setCurrency}
-            getCartQuantity={getCartQuantity}
-            getPercentOfCartTotal={getPercentOfCartTotal}
-            handleSelectAttribute={handleSelectAttribute}
-            handleProductIsInCart={handleProductIsInCart}
-            handleDecreaseCartQuantity={handleDecreaseCartQuantity}
-          />
-        }
-      >
+    <div onClick={() => isCurrActive && setIsCurrActive(false)}>
+      <Routes>
         <Route
-          index
+          path="/*"
           element={
-            <CategoryPage
-              categories={data.categories}
-              currency={currency}
-              handleAddToCart={handleAddToCart}
-            />
-          }
-        />
-        <Route
-          path={":categoryName"}
-          element={
-            <CategoryPage
-              categories={data.categories}
-              currency={currency}
-              handleAddToCart={handleAddToCart}
-            />
-          }
-        />
-
-        <Route
-          path={":categoryName/:productId"}
-          element={
-            <ProductPage
-              categories={data.categories}
+            <MainOverlay
+              isCurrActive={isCurrActive}
+              showCurrencyDropdown={showCurrencyDropdown}
               cart={cart}
-              setCart={setCart}
+              categories={data.categories}
               currency={currency}
-              handleProductIsInCart={handleProductIsInCart}
-            />
-          }
-        />
-
-        <Route
-          path="cart"
-          element={
-            <Cart
-              cart={cart}
-              setCart={setCart}
-              currency={currency}
-              getPercentOfCartTotal={getPercentOfCartTotal}
+              setCurrency={setCurrency}
               getCartQuantity={getCartQuantity}
+              getPercentOfCartTotal={getPercentOfCartTotal}
               handleSelectAttribute={handleSelectAttribute}
               handleProductIsInCart={handleProductIsInCart}
               handleDecreaseCartQuantity={handleDecreaseCartQuantity}
             />
           }
-        />
-      </Route>
-    </Routes>
+        >
+          <Route
+            index
+            element={
+              <CategoryPage
+                categories={data.categories}
+                currency={currency}
+                handleAddToCart={handleAddToCart}
+              />
+            }
+          />
+          <Route
+            path={":categoryName"}
+            element={
+              <CategoryPage
+                categories={data.categories}
+                currency={currency}
+                handleAddToCart={handleAddToCart}
+              />
+            }
+          />
+
+          <Route
+            path={":categoryName/:productId"}
+            element={
+              <ProductPage
+                categories={data.categories}
+                cart={cart}
+                setCart={setCart}
+                currency={currency}
+                handleProductIsInCart={handleProductIsInCart}
+              />
+            }
+          />
+
+          <Route
+            path="cart"
+            element={
+              <Cart
+                cart={cart}
+                setCart={setCart}
+                currency={currency}
+                getPercentOfCartTotal={getPercentOfCartTotal}
+                getCartQuantity={getCartQuantity}
+                handleSelectAttribute={handleSelectAttribute}
+                handleProductIsInCart={handleProductIsInCart}
+                handleDecreaseCartQuantity={handleDecreaseCartQuantity}
+              />
+            }
+          />
+        </Route>
+      </Routes>
+    </div>
   );
 }

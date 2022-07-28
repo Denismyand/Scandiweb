@@ -13,38 +13,41 @@ export function MiniCart({
   getPercentOfCartTotal,
 }) {
   return (
-    <div className={styles.MiniCart}>
-      {cart.length > 0 ? (
-        <>
-          <p className={styles.miniCartItemsQuantity}>
-            <b>My Cart,</b> <span>{getCartQuantity()} items</span>
-          </p>
-          <div>
-            {cart.map((cartItem) => {
-              return (
-                <MiniCartItem
-                  cartItem={cartItem}
-                  currency={currency}
-                  handleSelectAttribute={handleSelectAttribute}
-                  handleProductIsInCart={handleProductIsInCart}
-                  handleDecreaseCartQuantity={handleDecreaseCartQuantity}
-                  key={cartItem.cartItemId}
-                />
-              );
-            })}
+    <>
+      <div className={styles.miniCartBackground} onClick={showMiniCart} />
+      <div className={styles.MiniCart}>
+        {cart.length > 0 ? (
+          <>
+            <p className={styles.miniCartItemsQuantity}>
+              <b>My Cart,</b> <span>{getCartQuantity()} items</span>
+            </p>
+            <div>
+              {cart.map((cartItem) => {
+                return (
+                  <MiniCartItem
+                    cartItem={cartItem}
+                    currency={currency}
+                    handleSelectAttribute={handleSelectAttribute}
+                    handleProductIsInCart={handleProductIsInCart}
+                    handleDecreaseCartQuantity={handleDecreaseCartQuantity}
+                    key={cartItem.cartItemId}
+                  />
+                );
+              })}
+            </div>
+            <MiniCartTotal
+              showMiniCart={showMiniCart}
+              getPercentOfCartTotal={getPercentOfCartTotal}
+            />
+          </>
+        ) : (
+          <div className={styles.cartEmptyMessage}>
+            <h1>Your cart is empty</h1>
+            <p>Add items to cart to start shopping</p>
           </div>
-          <MiniCartTotal
-            showMiniCart={showMiniCart}
-            getPercentOfCartTotal={getPercentOfCartTotal}
-          />
-        </>
-      ) : (
-        <div className={styles.cartEmptyMessage}>
-          <h1>Your cart is empty</h1>
-          <p>Add items to cart to start shopping</p>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }
 

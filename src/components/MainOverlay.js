@@ -5,6 +5,8 @@ import { useState } from "react";
 import shopLogo from "../img/logo.svg";
 
 export function MainOverlay({
+  isCurrActive,
+  showCurrencyDropdown,
   cart,
   categories,
   currency,
@@ -15,12 +17,7 @@ export function MainOverlay({
   handleProductIsInCart,
   handleDecreaseCartQuantity,
 }) {
-  const [isCurrActive, setIsCurrActive] = useState(false);
   const [miniCartActive, setMiniCartActive] = useState(false);
-
-  function showCurrencyDropdown() {
-    setIsCurrActive(!isCurrActive);
-  }
 
   function changeCurrency(curr, currSign) {
     setCurrency({ label: curr, sign: currSign });
@@ -31,30 +28,28 @@ export function MainOverlay({
   }
   return (
     <>
-      <div onClick={() => isCurrActive && setIsCurrActive(false)}>
-        <Header
-          cart={cart}
-          categories={categories}
-          currency={currency}
-          changeCurrency={changeCurrency}
-          showCurrencyDropdown={showCurrencyDropdown}
-          isCurrActive={isCurrActive}
+      <Header
+        cart={cart}
+        categories={categories}
+        currency={currency}
+        changeCurrency={changeCurrency}
+        showCurrencyDropdown={showCurrencyDropdown}
+        isCurrActive={isCurrActive}
+        showMiniCart={showMiniCart}
+        getCartQuantity={getCartQuantity}
+      />
+      {miniCartActive && (
+        <MiniCart
           showMiniCart={showMiniCart}
+          cart={cart}
+          currency={currency}
           getCartQuantity={getCartQuantity}
+          getPercentOfCartTotal={getPercentOfCartTotal}
+          handleSelectAttribute={handleSelectAttribute}
+          handleProductIsInCart={handleProductIsInCart}
+          handleDecreaseCartQuantity={handleDecreaseCartQuantity}
         />
-        {miniCartActive && (
-          <MiniCart
-            showMiniCart={showMiniCart}
-            cart={cart}
-            currency={currency}
-            getCartQuantity={getCartQuantity}
-            getPercentOfCartTotal={getPercentOfCartTotal}
-            handleSelectAttribute={handleSelectAttribute}
-            handleProductIsInCart={handleProductIsInCart}
-            handleDecreaseCartQuantity={handleDecreaseCartQuantity}
-          />
-        )}
-      </div>
+      )}
       <Outlet />
     </>
   );
