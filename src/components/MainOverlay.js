@@ -31,7 +31,7 @@ export function MainOverlay({
   }
   return (
     <>
-      <div onClick={() => (isCurrActive ? setIsCurrActive(false) : null)}>
+      <div onClick={() => isCurrActive && setIsCurrActive(false)}>
         <Header
           cart={cart}
           categories={categories}
@@ -42,7 +42,7 @@ export function MainOverlay({
           showMiniCart={showMiniCart}
           getCartQuantity={getCartQuantity}
         />
-        {miniCartActive ? (
+        {miniCartActive && (
           <MiniCart
             showMiniCart={showMiniCart}
             cart={cart}
@@ -53,7 +53,7 @@ export function MainOverlay({
             handleProductIsInCart={handleProductIsInCart}
             handleDecreaseCartQuantity={handleDecreaseCartQuantity}
           />
-        ) : null}
+        )}
       </div>
       <Outlet />
     </>
@@ -93,9 +93,9 @@ function Header({
         isCurrActive={isCurrActive}
       />
       <button className="headerCartButton" onClick={showMiniCart}>
-        {cart.length > 0 ? (
+        {cart.length > 0 && (
           <span className="headerCartQuantity">{getCartQuantity()}</span>
-        ) : null}
+        )}
       </button>
     </div>
   );

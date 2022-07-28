@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import "./styles/App.css";
-import { CategoryPage } from "./components/CategoryPage.js";
+import { CategoryPage } from "./CategoryPage.js";
 import { ProductPage } from "./ProductPage.js";
 import { MainOverlay } from "./components/MainOverlay.js";
 import { Cart } from "./Cart.js";
@@ -31,14 +31,13 @@ export default function App() {
   function getPercentOfCartTotal(percent) {
     let total = 0;
 
-    cart.map((cartItem) => {
+    cart.forEach((cartItem) => {
       let itemPrice;
 
-      cartItem.prices.map((price) => {
+      cartItem.prices.forEach((price) => {
         if (price.currency.label === currency.label) {
           itemPrice = price.amount;
         }
-        return null;
       });
 
       return (total += cartItem.cartQuantity * itemPrice);
@@ -102,7 +101,7 @@ export default function App() {
       });
       return { ...attribute, items: newItems };
     });
-    return setCart([
+    setCart([
       ...cart,
       {
         ...product,
@@ -124,9 +123,10 @@ export default function App() {
         }
         return cartItem;
       });
-      return setCart(decreased);
+      setCart(decreased);
+      return;
     }
-    return setCart(
+    setCart(
       cart.filter((cartItem) => cartItem.cartItemId !== product.cartItemId)
     );
   }
@@ -190,13 +190,12 @@ export default function App() {
           index
           element={
             <CategoryPage
-              category={data.categories[0]}
+              categories={data.categories}
               currency={currency}
               handleAddToCart={handleAddToCart}
             />
           }
         />
-
         <Route
           path={":categoryName"}
           element={

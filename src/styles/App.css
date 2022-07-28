@@ -50,6 +50,8 @@
   top: 0;
   right: 13%;
   width: 100px;
+  font-size: 18px;
+  font-weight: 500;
 }
 .currencyChoiserButton {
   width: 60px;

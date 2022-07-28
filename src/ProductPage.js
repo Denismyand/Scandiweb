@@ -3,6 +3,14 @@ import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
+function getInitialAttributes(product) {
+  let begin = [];
+  for (let i = 0; i < product.attributes.length; i++) {
+    begin.push({ index: 0 });
+  }
+  return begin;
+}
+
 export function ProductPage({
   cart,
   setCart,
@@ -17,15 +25,7 @@ export function ProductPage({
   );
   const product = category.products.find((product) => product.id === productId);
   const [currImg, setCurrImg] = useState(0);
-  const [attributes, setAttributes] = useState(getInitialAttributes());
-
-  function getInitialAttributes() {
-    let begin = [];
-    for (let i = 0; i < product.attributes.length; i++) {
-      begin.push({ index: 0 });
-    }
-    return begin;
-  }
+  const [attributes, setAttributes] = useState(getInitialAttributes(product));
 
   function preDefineAttributes(attributeIndex, itemIndex) {
     let newAttributes = attributes.map((attribute, i) => {
@@ -51,17 +51,14 @@ export function ProductPage({
 
   function isSame(foundInCart) {
     similarity.current = true;
-    foundInCart.attributes.map((attribute, i) => {
-      attribute.items.map((item, itemIndex) => {
+    foundInCart.attributes.forEach((attribute, i) => {
+      attribute.items.forEach((item, itemIndex) => {
         if (itemIndex === attributes[i].index) {
-          if (typeof item.selectedItem === "undefined") {
+          if (!item.selectedItem) {
             similarity.current = false;
           }
-          return null;
         }
-        return null;
       });
-      return null;
     });
     return similarity.current;
   }
@@ -76,7 +73,7 @@ export function ProductPage({
       });
       return { ...attribute, items: newItems };
     });
-    return setCart([
+    setCart([
       ...cart,
       {
         ...product,
@@ -143,21 +140,20 @@ function ProductInfo({
         preDefineAttributes={preDefineAttributes}
       />
       {product.prices.map((price) => {
-        if (price.currency.label === currency.label) {
-          return (
+        return (
+          price.currency.label === currency.label && (
             <div key={price.currency.label} className={styles.productPrice}>
               <p>PRICE:</p>
               <p className={styles.productPriceAmount}>
                 {price.currency.symbol + price.amount}
               </p>
             </div>
-          );
-        }
-        return null;
+          )
+        );
       })}
-      {!product.inStock ? (
+      {!product.inStock && (
         <p className={styles.productIsOutOfStock}>Item is out of stock</p>
-      ) : null}
+      )}
       <button
         disabled={!product.inStock}
         className={
@@ -179,36 +175,27 @@ function ProductInfo({
 
 function ProductAttributes({ product, attributes, preDefineAttributes }) {
   function differAttributes(attribute, i) {
-    if (attribute.type === "text") {
-      return (
-        <>
-          <p className={styles.attributeName}>
-            {attribute.name.toUpperCase()}:
-          </p>
-          {attribute.items.map((item, index) => (
-            <button
-              className={
-                index === attributes[i].index
-                  ? styles.activeTextAttributeSelectButton
-                  : styles.textAttributeSelectButton
-              }
-              key={item.id}
-              onClick={() => preDefineAttributes(i, index)}
-            >
-              {item.value}
-            </button>
-          ))}
-        </>
-      );
-    }
-
-    if (attribute.type === "swatch")
-      return (
-        <>
-          <p className={styles.attributeName}>
-            {attribute.name.toUpperCase()}:
-          </p>
-          {attribute.items.map((item, index) => {
+    return (
+      <>
+        <p className={styles.attributeName}>{attribute.name.toUpperCase()}:</p>
+        {attribute.type === "text" &&
+          attribute.items.map((item, index) => {
+            return (
+              <button
+                className={
+                  index === attributes[i].index
+                    ? styles.activeTextAttributeSelectButton
+                    : styles.textAttributeSelectButton
+                }
+                key={item.id}
+                onClick={() => preDefineAttributes(i, index)}
+              >
+                {item.value}
+              </button>
+            );
+          })}
+        {attribute.type === "swatch" &&
+          attribute.items.map((item, index) => {
             return (
               <button
                 className={
@@ -224,8 +211,8 @@ function ProductAttributes({ product, attributes, preDefineAttributes }) {
               />
             );
           })}
-        </>
-      );
+      </>
+    );
   }
   return (
     <>

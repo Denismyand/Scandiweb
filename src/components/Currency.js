@@ -21,42 +21,30 @@ export function Currency({
           alt=""
         />
       </button>
-      {isCurrActive ? <CurrencyList changeCurrency={changeCurrency} /> : null}
+      {isCurrActive && <CurrencyList changeCurrency={changeCurrency} />}
     </div>
   );
 }
 
 function CurrencyList({ changeCurrency }) {
+  const currencies = [
+    { label: "USD", symbol: "$" },
+    { label: "GBP", symbol: "£" },
+    { label: "AUD", symbol: "A$" },
+    { label: "JPY", symbol: "¥" },
+  ];
   return (
     <div className="currencyList">
-      <p
-        onClick={() => {
-          changeCurrency("USD", "$");
-        }}
-      >
-        $ USD
-      </p>
-      <p
-        onClick={() => {
-          changeCurrency("GBP", "£");
-        }}
-      >
-        £ GBP
-      </p>
-      <p
-        onClick={() => {
-          changeCurrency("AUD", "A$");
-        }}
-      >
-        A$ AUD
-      </p>
-      <p
-        onClick={() => {
-          changeCurrency("JPY", "¥");
-        }}
-      >
-        ¥ JPY
-      </p>
+      {currencies.map((currency) => (
+        <p
+          key={currency.label}
+          onClick={() => {
+            changeCurrency(currency.label, currency.symbol);
+          }}
+        >
+          {currency.symbol + " " + currency.label}
+        </p>
+      ))}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import styles from "./styles/cart.module.css";
 import { useState } from "react";
+import { ProductAttributes } from "./components/ProductAttributes.js";
 
 export function Cart({
   cart,
@@ -62,6 +63,7 @@ function CartItem({
           <ProductAttributes
             product={cartItem}
             handleSelectAttribute={handleSelectAttribute}
+            styles={styles}
           />
         </div>
         <div className={styles.cartItemQuantity}>
@@ -86,75 +88,13 @@ function CartItemInfo({ cartItem, currency }) {
       <p className={styles.brand}>{cartItem.brand}</p>
       <p className={styles.productName}>{cartItem.name}</p>
       {cartItem.prices.map((price) => {
-        if (price.currency.label === currency.label) {
-          return (
+        return (
+          price.currency.label === currency.label && (
             <p key={price.currency.label} className={styles.productPrice}>
               {price.currency.symbol + price.amount}
             </p>
-          );
-        }
-        return null;
-      })}
-    </>
-  );
-}
-
-function ProductAttributes({ product, handleSelectAttribute }) {
-  function differAttributes(attribute) {
-    if (attribute.type === "text") {
-      return (
-        <>
-          <p className={styles.attributeName}>
-            {attribute.name.toUpperCase()}:
-          </p>
-          {attribute.items.map((item) => (
-            <button
-              className={
-                item.selectedItem
-                  ? styles.activeTextAttributeSelectButton
-                  : styles.textAttributeSelectButton
-              }
-              key={item.id}
-              onClick={() => handleSelectAttribute(product, attribute, item.id)}
-            >
-              {item.value}
-            </button>
-          ))}
-        </>
-      );
-    }
-
-    if (attribute.type === "swatch")
-      return (
-        <>
-          <p className={styles.attributeName}>
-            {attribute.name.toUpperCase()}:
-          </p>
-          {attribute.items.map((item) => {
-            return (
-              <button
-                className={
-                  item.selectedItem
-                    ? styles.activeSwatchAttributeSelectButton
-                    : styles.swatchAttributeSelectButton
-                }
-                key={item.id}
-                style={{
-                  backgroundColor: `${item.value}`,
-                }}
-                onClick={() =>
-                  handleSelectAttribute(product, attribute, item.id)
-                }
-              />
-            );
-          })}
-        </>
-      );
-  }
-  return (
-    <>
-      {product.attributes.map((attribute) => {
-        return <div key={attribute.id}>{differAttributes(attribute)}</div>;
+          )
+        );
       })}
     </>
   );
