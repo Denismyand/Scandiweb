@@ -8,6 +8,7 @@ import { Cart } from "./Cart.js";
 import { getProducts } from "./utils/request.js";
 import { useQuery } from "@apollo/client";
 import { Outlet, Routes, Route, NavLink } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 import shopLogo from "./img/logo.svg";
 
 export default function App() {
@@ -26,13 +27,10 @@ export default function App() {
   }
 
   function getCartQuantity() {
-    let total = 0;
-
-    cart.map((cartItem) => (total += cartItem.cartQuantity));
-    return total;
+    return cart.reduce((total, current) => total + current.cartQuantity, 0);
   }
 
-  function getCartTotal() {
+  function getPercentOfCartTotal(percent) {
     let total = 0;
 
     cart.map((cartItem) => {
@@ -47,25 +45,7 @@ export default function App() {
 
       return (total += cartItem.cartQuantity * itemPrice);
     });
-    return currency.sign + Math.round(total * 100) / 100;
-  }
-
-  function getCartTax(tax) {
-    let total = 0;
-
-    cart.map((cartItem) => {
-      let itemPrice;
-
-      cartItem.prices.map((price) => {
-        if (price.currency.label === currency.label) {
-          itemPrice = price.amount;
-        }
-        return null;
-      });
-
-      return (total += cartItem.cartQuantity * itemPrice);
-    });
-    return currency.sign + Math.round(total * (tax / 100) * 100) / 100;
+    return currency.sign + Math.round(total * (percent / 100) * 100) / 100;
   }
 
   const maxCartQuantity = 5;
@@ -129,7 +109,7 @@ export default function App() {
       {
         ...product,
         attributes: newAttributes,
-        cartItemId: 999,
+        cartItemId: uuidv4(),
         cartQuantity: 1,
       },
     ]);
@@ -183,16 +163,6 @@ export default function App() {
     });
     setCart(nextCart);
   }
-  function setCartItemIds() {
-    let nextCart = cart.map((cartItem, i) => {
-      return { ...cartItem, cartItemId: i };
-    });
-    setCart(nextCart);
-  }
-  useEffect(() => {
-    setCartItemIds();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cart.length]);
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -211,7 +181,7 @@ export default function App() {
             currency={currency}
             setCurrency={setCurrency}
             getCartQuantity={getCartQuantity}
-            getCartTotal={getCartTotal}
+            getPercentOfCartTotal={getPercentOfCartTotal}
             handleSelectAttribute={handleSelectAttribute}
             handleProductIsInCart={handleProductIsInCart}
             handleDecreaseCartQuantity={handleDecreaseCartQuantity}
@@ -269,9 +239,8 @@ export default function App() {
               cart={cart}
               setCart={setCart}
               currency={currency}
-              getCartTax={getCartTax}
+              getPercentOfCartTotal={getPercentOfCartTotal}
               getCartQuantity={getCartQuantity}
-              getCartTotal={getCartTotal}
               handleSelectAttribute={handleSelectAttribute}
               handleProductIsInCart={handleProductIsInCart}
               handleDecreaseCartQuantity={handleDecreaseCartQuantity}
@@ -289,7 +258,7 @@ function MainOverlay({
   currency,
   setCurrency,
   getCartQuantity,
-  getCartTotal,
+  getPercentOfCartTotal,
   handleSelectAttribute,
   handleProductIsInCart,
   handleDecreaseCartQuantity,
@@ -327,7 +296,7 @@ function MainOverlay({
             cart={cart}
             currency={currency}
             getCartQuantity={getCartQuantity}
-            getCartTotal={getCartTotal}
+            getPercentOfCartTotal={getPercentOfCartTotal}
             handleSelectAttribute={handleSelectAttribute}
             handleProductIsInCart={handleProductIsInCart}
             handleDecreaseCartQuantity={handleDecreaseCartQuantity}

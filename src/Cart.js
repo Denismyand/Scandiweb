@@ -5,9 +5,8 @@ export function Cart({
   cart,
   setCart,
   currency,
-  getCartTax,
+  getPercentOfCartTotal,
   getCartQuantity,
-  getCartTotal,
   handleSelectAttribute,
   handleProductIsInCart,
   handleDecreaseCartQuantity,
@@ -51,8 +50,7 @@ export function Cart({
           </div>
           <CartTotal
             setCart={setCart}
-            getCartTax={getCartTax}
-            getCartTotal={getCartTotal}
+            getPercentOfCartTotal={getPercentOfCartTotal}
             getCartQuantity={getCartQuantity}
           />
         </>
@@ -181,25 +179,26 @@ function CartItemPicture({ cartItem }) {
   );
 }
 
-function CartTotal({ setCart, getCartTax, getCartTotal, getCartQuantity }) {
+function CartTotal({ setCart, getPercentOfCartTotal, getCartQuantity }) {
+  const tax = 21;
   return (
     <>
       <hr />
       <div className={styles.cartTotal}>
         <div>
-          <p>Tax 21%:</p>
+          <p>Tax {tax}%:</p>
           <p>Quantity:</p>
           <p className={styles.cartTotalText}>Total:</p>
         </div>
         <div>
           <p>
-            <b>{getCartTax(21)}</b>
+            <b>{getPercentOfCartTotal(tax)}</b>
           </p>
           <p>
             <b>{getCartQuantity()}</b>
           </p>
           <p>
-            <b>{getCartTotal()}</b>
+            <b>{getPercentOfCartTotal(100)}</b>
           </p>
         </div>
       </div>

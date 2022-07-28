@@ -1,5 +1,6 @@
 import styles from "./styles/productpage.module.css";
 import { useState, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export function ProductPage({
   cart,
@@ -73,7 +74,7 @@ export function ProductPage({
       {
         ...product,
         attributes: newAttributes,
-        cartItemId: 999,
+        cartItemId: uuidv4(),
         cartQuantity: 1,
       },
     ]);

@@ -9,7 +9,7 @@ export function MiniCart({
   handleSelectAttribute,
   handleProductIsInCart,
   handleDecreaseCartQuantity,
-  getCartTotal,
+  getPercentOfCartTotal,
 }) {
   return (
     <div className={styles.MiniCart}>
@@ -53,7 +53,7 @@ export function MiniCart({
           </div>
           <MiniCartTotal
             showMiniCart={showMiniCart}
-            getCartTotal={getCartTotal}
+            getPercentOfCartTotal={getPercentOfCartTotal}
           />
         </>
       ) : (
@@ -142,7 +142,7 @@ function ProductAttributes({ product, handleSelectAttribute }) {
   );
 }
 
-function MiniCartTotal({ showMiniCart, getCartTotal }) {
+function MiniCartTotal({ showMiniCart, getPercentOfCartTotal }) {
   return (
     <div className={styles.miniCartTotal}>
       <div className={styles.miniCartTotalLeft}>
@@ -156,7 +156,7 @@ function MiniCartTotal({ showMiniCart, getCartTotal }) {
         </Link>
       </div>
       <div className={styles.miniCartTotalRight}>
-        <b>{getCartTotal()}</b>
+        <b>{getPercentOfCartTotal(100)}</b>
         <Link
           className={styles.toCheckoutMiniCartButton}
           to="/cart"
