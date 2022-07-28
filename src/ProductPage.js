@@ -1,14 +1,21 @@
 import styles from "./styles/productpage.module.css";
 import { useState, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 export function ProductPage({
   cart,
   setCart,
-  product,
+  categories,
   currency,
   handleProductIsInCart,
 }) {
+  const { categoryName } = useParams();
+  const { productId } = useParams();
+  const category = categories.find(
+    (category) => category.name === categoryName
+  );
+  const product = category.products.find((product) => product.id === productId);
   const [currImg, setCurrImg] = useState(0);
   const [attributes, setAttributes] = useState(getInitialAttributes());
 

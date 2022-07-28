@@ -1,6 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
-export function CategoryPage({ category, currency, handleAddToCart }) {
+export function CategoryPage({ categories, currency, handleAddToCart }) {
+  const { categoryName } = useParams();
+  const category = categories.find(
+    (category) => category.name === categoryName
+  );
   return (
     <>
       <div className="CategoryPage">

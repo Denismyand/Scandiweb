@@ -1,15 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import "./styles/App.css";
-import { Currency } from "./components/Currency.js";
 import { CategoryPage } from "./components/CategoryPage.js";
 import { ProductPage } from "./ProductPage.js";
-import { MiniCart } from "./MiniCart.js";
+import { MainOverlay } from "./components/MainOverlay.js";
 import { Cart } from "./Cart.js";
 import { getProducts } from "./utils/request.js";
 import { useQuery } from "@apollo/client";
-import { Outlet, Routes, Route, NavLink } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import shopLogo from "./img/logo.svg";
 
 export default function App() {
   const { loading, error, data } = useQuery(getProducts);
@@ -198,40 +196,31 @@ export default function App() {
             />
           }
         />
-        {data.categories.map((category) => {
-          return (
-            <Route
-              path={category.name}
-              key={category.name}
-              element={
-                <CategoryPage
-                  category={category}
-                  currency={currency}
-                  handleAddToCart={handleAddToCart}
-                />
-              }
+
+        <Route
+          path={":categoryName"}
+          element={
+            <CategoryPage
+              categories={data.categories}
+              currency={currency}
+              handleAddToCart={handleAddToCart}
             />
-          );
-        })}
-        {data.categories.map((category) => {
-          return category.products.map((product) => {
-            return (
-              <Route
-                path={category.name + "/:" + product.id}
-                key={product.id}
-                element={
-                  <ProductPage
-                    cart={cart}
-                    setCart={setCart}
-                    product={product}
-                    currency={currency}
-                    handleProductIsInCart={handleProductIsInCart}
-                  />
-                }
-              />
-            );
-          });
-        })}
+          }
+        />
+
+        <Route
+          path={":categoryName/:productId"}
+          element={
+            <ProductPage
+              categories={data.categories}
+              cart={cart}
+              setCart={setCart}
+              currency={currency}
+              handleProductIsInCart={handleProductIsInCart}
+            />
+          }
+        />
+
         <Route
           path="cart"
           element={
@@ -249,102 +238,5 @@ export default function App() {
         />
       </Route>
     </Routes>
-  );
-}
-
-function MainOverlay({
-  cart,
-  categories,
-  currency,
-  setCurrency,
-  getCartQuantity,
-  getPercentOfCartTotal,
-  handleSelectAttribute,
-  handleProductIsInCart,
-  handleDecreaseCartQuantity,
-}) {
-  const [isCurrActive, setIsCurrActive] = useState(false);
-  const [miniCartActive, setMiniCartActive] = useState(false);
-
-  function showCurrencyDropdown() {
-    setIsCurrActive(!isCurrActive);
-  }
-
-  function changeCurrency(curr, currSign) {
-    setCurrency({ label: curr, sign: currSign });
-  }
-
-  function showMiniCart() {
-    setMiniCartActive(!miniCartActive);
-  }
-  return (
-    <>
-      <div onClick={() => (isCurrActive ? setIsCurrActive(false) : null)}>
-        <Header
-          cart={cart}
-          categories={categories}
-          currency={currency}
-          changeCurrency={changeCurrency}
-          showCurrencyDropdown={showCurrencyDropdown}
-          isCurrActive={isCurrActive}
-          showMiniCart={showMiniCart}
-          getCartQuantity={getCartQuantity}
-        />
-        {miniCartActive ? (
-          <MiniCart
-            showMiniCart={showMiniCart}
-            cart={cart}
-            currency={currency}
-            getCartQuantity={getCartQuantity}
-            getPercentOfCartTotal={getPercentOfCartTotal}
-            handleSelectAttribute={handleSelectAttribute}
-            handleProductIsInCart={handleProductIsInCart}
-            handleDecreaseCartQuantity={handleDecreaseCartQuantity}
-          />
-        ) : null}
-      </div>
-      <Outlet />
-    </>
-  );
-}
-
-function Header({
-  cart,
-  categories,
-  currency,
-  changeCurrency,
-  showCurrencyDropdown,
-  isCurrActive,
-  showMiniCart,
-  getCartQuantity,
-}) {
-  return (
-    <div className="Header">
-      {categories.map((category) => {
-        return (
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? "headerLink activeLink" : "headerLink"
-            }
-            to={category.name}
-            key={category.name}
-          >
-            {category.name.toUpperCase()}
-          </NavLink>
-        );
-      })}
-      <img className="logo" src={shopLogo} alt="logo" />
-      <Currency
-        currency={currency}
-        changeCurrency={changeCurrency}
-        showCurrencyDropdown={showCurrencyDropdown}
-        isCurrActive={isCurrActive}
-      />
-      <button className="headerCartButton" onClick={showMiniCart}>
-        {cart.length > 0 ? (
-          <span className="headerCartQuantity">{getCartQuantity()}</span>
-        ) : null}
-      </button>
-    </div>
   );
 }

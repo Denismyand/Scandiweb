@@ -1,4 +1,4 @@
-import styles from "./styles/minicart.module.css";
+import styles from "../styles/minicart.module.css";
 import { Link } from "react-router-dom";
 
 export function MiniCart({
