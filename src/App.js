@@ -5,49 +5,17 @@ import { CategoryPage } from "./components/CategoryPage.js";
 import { ProductPage } from "./ProductPage.js";
 import { MiniCart } from "./MiniCart.js";
 import { Cart } from "./Cart.js";
-import { useQuery, gql } from "@apollo/client";
+import { getProducts } from "./utils/request.js";
+import { useQuery } from "@apollo/client";
 import { Outlet, Routes, Route, NavLink } from "react-router-dom";
-
 import shopLogo from "./img/logo.svg";
 
-const Get_Categories = gql`
-  query GetProducts {
-    categories {
-      name
-      products {
-        id
-        name
-        inStock
-        gallery
-        description
-        category
-        attributes {
-          id
-          name
-          type
-          items {
-            displayValue
-            value
-            id
-          }
-        }
-        prices {
-          currency {
-            label
-            symbol
-          }
-          amount
-        }
-        brand
-      }
-    }
-  }
-`;
-
 export default function App() {
-  const { loading, error, data } = useQuery(Get_Categories);
-  const [currency, setCurrency] = useState("USD");
-  const [currencySign, setCurrencySign] = useState("$");
+  const { loading, error, data } = useQuery(getProducts);
+  const [currency, setCurrency] = useState({
+    label: "USD",
+    sign: "$",
+  });
   const [cart, setCart] = useState(isCartCached());
 
   function isCartCached() {
@@ -71,7 +39,7 @@ export default function App() {
       let itemPrice;
 
       cartItem.prices.map((price) => {
-        if (price.currency.label === currency) {
+        if (price.currency.label === currency.label) {
           itemPrice = price.amount;
         }
         return null;
@@ -79,7 +47,7 @@ export default function App() {
 
       return (total += cartItem.cartQuantity * itemPrice);
     });
-    return currencySign + Math.round(total * 100) / 100;
+    return currency.sign + Math.round(total * 100) / 100;
   }
 
   function getCartTax(tax) {
@@ -89,7 +57,7 @@ export default function App() {
       let itemPrice;
 
       cartItem.prices.map((price) => {
-        if (price.currency.label === currency) {
+        if (price.currency.label === currency.label) {
           itemPrice = price.amount;
         }
         return null;
@@ -97,7 +65,7 @@ export default function App() {
 
       return (total += cartItem.cartQuantity * itemPrice);
     });
-    return currencySign + Math.round(total * (tax / 100) * 100) / 100;
+    return currency.sign + Math.round(total * (tax / 100) * 100) / 100;
   }
 
   const maxCartQuantity = 5;
@@ -118,17 +86,14 @@ export default function App() {
 
   function isSame(foundInCart) {
     similarity.current = true;
-    foundInCart.attributes.map((attribute) => {
-      attribute.items.map((item, itemIndex) => {
+    foundInCart.attributes.forEach((attribute) => {
+      attribute.items.forEach((item, itemIndex) => {
         if (itemIndex === 0) {
-          if (typeof item.selectedItem === "undefined") {
+          if (!item.selectedItem) {
             similarity.current = false;
           }
-          return null;
         }
-        return null;
       });
-      return null;
     });
     return similarity.current;
   }
@@ -146,7 +111,7 @@ export default function App() {
       }
       return cartItem;
     });
-    return setCart(nextCart);
+    setCart(nextCart);
   }
 
   function handleProductIsNotInCart(product) {
@@ -245,8 +210,6 @@ export default function App() {
             categories={data.categories}
             currency={currency}
             setCurrency={setCurrency}
-            currencySign={currencySign}
-            setCurrencySign={setCurrencySign}
             getCartQuantity={getCartQuantity}
             getCartTotal={getCartTotal}
             handleSelectAttribute={handleSelectAttribute}
@@ -325,8 +288,6 @@ function MainOverlay({
   categories,
   currency,
   setCurrency,
-  currencySign,
-  setCurrencySign,
   getCartQuantity,
   getCartTotal,
   handleSelectAttribute,
@@ -341,8 +302,7 @@ function MainOverlay({
   }
 
   function changeCurrency(curr, currSign) {
-    setCurrency(curr);
-    setCurrencySign(currSign);
+    setCurrency({ label: curr, sign: currSign });
   }
 
   function showMiniCart() {
@@ -354,8 +314,8 @@ function MainOverlay({
         <Header
           cart={cart}
           categories={categories}
+          currency={currency}
           changeCurrency={changeCurrency}
-          currencySign={currencySign}
           showCurrencyDropdown={showCurrencyDropdown}
           isCurrActive={isCurrActive}
           showMiniCart={showMiniCart}
@@ -382,7 +342,7 @@ function MainOverlay({
 function Header({
   cart,
   categories,
-  currencySign,
+  currency,
   changeCurrency,
   showCurrencyDropdown,
   isCurrActive,
@@ -406,7 +366,7 @@ function Header({
       })}
       <img className="logo" src={shopLogo} alt="logo" />
       <Currency
-        currencySign={currencySign}
+        currency={currency}
         changeCurrency={changeCurrency}
         showCurrencyDropdown={showCurrencyDropdown}
         isCurrActive={isCurrActive}

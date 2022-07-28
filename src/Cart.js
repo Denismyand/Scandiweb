@@ -71,7 +71,7 @@ function CartItemInfo({ cartItem, currency }) {
       <p className={styles.brand}>{cartItem.brand}</p>
       <p className={styles.productName}>{cartItem.name}</p>
       {cartItem.prices.map((price) => {
-        if (price.currency.label === currency) {
+        if (price.currency.label === currency.label) {
           return (
             <p key={price.currency.label} className={styles.productPrice}>
               {price.currency.symbol + price.amount}

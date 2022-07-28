@@ -31,7 +31,7 @@ export function CategoryPage({ category, currency, handleAddToCart }) {
                 <div className="productInfo">
                   <p>{product.name}</p>
                   {product.prices.map((price) => {
-                    if (price.currency.label === currency) {
+                    if (price.currency.label === currency.label) {
                       return (
                         <p key={price.currency.label}>
                           <b className="price">

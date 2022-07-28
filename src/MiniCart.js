@@ -72,7 +72,7 @@ function MiniCartItemInfo({ cartItem, currency }) {
       <p className={styles.miniCartItemName}>{cartItem.brand}</p>
       <p className={styles.miniCartItemName}>{cartItem.name}</p>
       {cartItem.prices.map((price) => {
-        if (price.currency.label === currency) {
+        if (price.currency.label === currency.label) {
           return (
             <p key={price.currency.label} className={styles.miniCartItemPrice}>
               {price.currency.symbol + price.amount}

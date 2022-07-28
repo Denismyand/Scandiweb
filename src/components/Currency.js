@@ -2,7 +2,7 @@ import arrowDown from "../img/down-arrow.svg";
 import arrowUp from "../img/up-arrow.svg";
 
 export function Currency({
-  currencySign,
+  currency,
   changeCurrency,
   showCurrencyDropdown,
   isCurrActive,
@@ -13,7 +13,7 @@ export function Currency({
         className="currencyChoiserButton"
         onClick={() => showCurrencyDropdown()}
       >
-        {currencySign + " "}
+        {currency.sign + " "}
         <img
           src={isCurrActive ? arrowUp : arrowDown}
           width="10px"

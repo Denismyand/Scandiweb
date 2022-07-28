@@ -135,7 +135,7 @@ function ProductInfo({
         preDefineAttributes={preDefineAttributes}
       />
       {product.prices.map((price) => {
-        if (price.currency.label === currency) {
+        if (price.currency.label === currency.label) {
           return (
             <div key={price.currency.label} className={styles.productPrice}>
               <p>PRICE:</p>
