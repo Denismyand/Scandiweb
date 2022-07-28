@@ -21,33 +21,14 @@ export function MiniCart({
           <div>
             {cart.map((cartItem) => {
               return (
-                <div className={styles.miniCartItem} key={cartItem.cartItemId}>
-                  <div className={styles.miniCartItemInfo}>
-                    <MiniCartItemInfo cartItem={cartItem} currency={currency} />
-                    <ProductAttributes
-                      product={cartItem}
-                      handleSelectAttribute={handleSelectAttribute}
-                    />
-                  </div>
-                  <div className={styles.miniCartItemQuantity}>
-                    <button
-                      className={styles.miniCartIncreaseQtyButton}
-                      onClick={() => handleProductIsInCart(cartItem)}
-                    />
-                    <p className={styles.miniCartQtyNumber}>
-                      {cartItem.cartQuantity}
-                    </p>
-                    <button
-                      className={styles.miniCartDecreaseQtyButton}
-                      onClick={() => handleDecreaseCartQuantity(cartItem)}
-                    />
-                  </div>
-                  <img
-                    className={styles.miniCartItemPicture}
-                    src={cartItem.gallery[0]}
-                    alt={cartItem.name}
-                  />
-                </div>
+                <MiniCartItem
+                  cartItem={cartItem}
+                  currency={currency}
+                  handleSelectAttribute={handleSelectAttribute}
+                  handleProductIsInCart={handleProductIsInCart}
+                  handleDecreaseCartQuantity={handleDecreaseCartQuantity}
+                  key={cartItem.cartItemId}
+                />
               );
             })}
           </div>
@@ -62,6 +43,42 @@ export function MiniCart({
           <p>Add items to cart to start shopping</p>
         </div>
       )}
+    </div>
+  );
+}
+
+function MiniCartItem({
+  cartItem,
+  currency,
+  handleSelectAttribute,
+  handleProductIsInCart,
+  handleDecreaseCartQuantity,
+}) {
+  return (
+    <div className={styles.miniCartItem}>
+      <div className={styles.miniCartItemInfo}>
+        <MiniCartItemInfo cartItem={cartItem} currency={currency} />
+        <ProductAttributes
+          product={cartItem}
+          handleSelectAttribute={handleSelectAttribute}
+        />
+      </div>
+      <div className={styles.miniCartItemQuantity}>
+        <button
+          className={styles.miniCartIncreaseQtyButton}
+          onClick={() => handleProductIsInCart(cartItem)}
+        />
+        <p className={styles.miniCartQtyNumber}>{cartItem.cartQuantity}</p>
+        <button
+          className={styles.miniCartDecreaseQtyButton}
+          onClick={() => handleDecreaseCartQuantity(cartItem)}
+        />
+      </div>
+      <img
+        className={styles.miniCartItemPicture}
+        src={cartItem.gallery[0]}
+        alt={cartItem.name}
+      />
     </div>
   );
 }

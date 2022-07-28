@@ -19,32 +19,14 @@ export function Cart({
           <div>
             {cart.map((cartItem) => {
               return (
-                <div key={cartItem.cartItemId}>
-                  <hr />
-                  <div className={styles.cartItem}>
-                    <div className={styles.cartItemInfo}>
-                      <CartItemInfo cartItem={cartItem} currency={currency} />
-                      <ProductAttributes
-                        product={cartItem}
-                        handleSelectAttribute={handleSelectAttribute}
-                      />
-                    </div>
-                    <div className={styles.cartItemQuantity}>
-                      <button
-                        className={styles.cartIncreaseQtyButton}
-                        onClick={() => handleProductIsInCart(cartItem)}
-                      />
-                      <p className={styles.cartQtyNumber}>
-                        {cartItem.cartQuantity}
-                      </p>
-                      <button
-                        className={styles.cartDecreaseQtyButton}
-                        onClick={() => handleDecreaseCartQuantity(cartItem)}
-                      />
-                    </div>
-                    <CartItemPicture cartItem={cartItem} />
-                  </div>
-                </div>
+                <CartItem
+                  cartItem={cartItem}
+                  currency={currency}
+                  handleSelectAttribute={handleSelectAttribute}
+                  handleProductIsInCart={handleProductIsInCart}
+                  handleDecreaseCartQuantity={handleDecreaseCartQuantity}
+                  key={cartItem.cartItemId}
+                />
               );
             })}
           </div>
@@ -60,6 +42,41 @@ export function Cart({
           <p>Add items to cart to start shopping</p>
         </div>
       )}
+    </div>
+  );
+}
+
+function CartItem({
+  cartItem,
+  currency,
+  handleSelectAttribute,
+  handleProductIsInCart,
+  handleDecreaseCartQuantity,
+}) {
+  return (
+    <div>
+      <hr />
+      <div className={styles.cartItem}>
+        <div className={styles.cartItemInfo}>
+          <CartItemInfo cartItem={cartItem} currency={currency} />
+          <ProductAttributes
+            product={cartItem}
+            handleSelectAttribute={handleSelectAttribute}
+          />
+        </div>
+        <div className={styles.cartItemQuantity}>
+          <button
+            className={styles.cartIncreaseQtyButton}
+            onClick={() => handleProductIsInCart(cartItem)}
+          />
+          <p className={styles.cartQtyNumber}>{cartItem.cartQuantity}</p>
+          <button
+            className={styles.cartDecreaseQtyButton}
+            onClick={() => handleDecreaseCartQuantity(cartItem)}
+          />
+        </div>
+        <CartItemPicture cartItem={cartItem} />
+      </div>
     </div>
   );
 }
