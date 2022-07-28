@@ -1,6 +1,5 @@
-.ProductPage {
+.productPage {
   display: flex;
-  flex-wrap: wrap;
   padding: 100px 10% 50px;
 }
 .productMiniPics {
@@ -28,7 +27,8 @@
   width: 700px;
   padding: 5px 30px;
 }
-.ProductInfo {
+.productInfo {
+  width: 700px;
   padding: 5px 30px;
 }
 .brand {
@@ -151,5 +151,15 @@
   .productPicture {
     width: 500px;
     padding: 5px 30px;
+  }
+}
+
+@media (max-width: 1919px) {
+  .productPage {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .productInfo {
+    width: 80%;
   }
 }

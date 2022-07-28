@@ -7,7 +7,7 @@ export function CategoryPage({ categories, currency, handleAddToCart }) {
   );
   return (
     <>
-      <div className="CategoryPage">
+      <div className="categoryPage">
         <h1> Category: {category.name}</h1>
         <div className="productList">
           {category.products.map((product) => {

@@ -15,7 +15,7 @@ export function MiniCart({
   return (
     <>
       <div className={styles.miniCartBackground} onClick={showMiniCart} />
-      <div className={styles.MiniCart}>
+      <div className={styles.miniCart}>
         {cart.length > 0 ? (
           <>
             <p className={styles.miniCartItemsQuantity}>

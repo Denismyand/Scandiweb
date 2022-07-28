@@ -8,7 +8,7 @@ body {
   min-width: 850px;
 }
 
-.Header {
+.header {
   padding: 0 10%;
   position: sticky;
   top: 0;
@@ -19,7 +19,7 @@ body {
   background-color: #ffffff;
   z-index: 5;
 }
-.Header a {
+.header a {
   font-family: "Raleway";
 }
 .headerLink {
@@ -112,13 +112,13 @@ body {
   color: #ffffff;
   border-radius: 50%;
 }
-.CategoryPage {
+.categoryPage {
   padding: 30px 10% 70px;
   display: flex;
   flex-direction: column;
   gap: 30px;
 }
-.CategoryPage h1 {
+.categoryPage h1 {
   font-size: 42px;
   font-weight: 400;
   padding: 50px 0 70px;
@@ -205,7 +205,7 @@ body {
 }
 
 @media (max-width: 1050px) {
-  .Header {
+  .header {
     padding: 0 30px;
   }
   .logo {
@@ -224,7 +224,7 @@ body {
 }
 
 @media (max-width: 1919px) {
-  .CategoryPage h1 {
+  .categoryPage h1 {
     text-align: center;
   }
   .product {

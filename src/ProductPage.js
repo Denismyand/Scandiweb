@@ -89,7 +89,7 @@ export function ProductPage({
   }
 
   return (
-    <div className={styles.ProductPage}>
+    <div className={styles.productPage}>
       <div className={styles.productMiniPics}>
         {product.gallery.map((pic, index) => {
           return (
@@ -110,7 +110,7 @@ export function ProductPage({
         src={product.gallery[currImg]}
         alt=""
       />
-      <div className={styles.ProductInfo}>
+      <div className={styles.productInfo}>
         <ProductInfo
           product={product}
           currency={currency}

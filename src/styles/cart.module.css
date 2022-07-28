@@ -7,10 +7,10 @@ hr {
 .cartEmptyMessage p {
   font-size: 20px;
 }
-.CartPage {
+.cartPage {
   padding: 0 10% 50px;
 }
-.CartPage h1 {
+.cartPage h1 {
   font-weight: 700;
   padding: 50px 0;
 }

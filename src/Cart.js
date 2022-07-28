@@ -13,7 +13,7 @@ export function Cart({
   handleDecreaseCartQuantity,
 }) {
   return (
-    <div className={styles.CartPage}>
+    <div className={styles.cartPage}>
       <h1>CART</h1>
       {cart.length > 0 ? (
         <>

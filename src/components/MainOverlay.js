@@ -66,7 +66,7 @@ function Header({
   getCartQuantity,
 }) {
   return (
-    <div className="Header">
+    <div className="header">
       {categories.map((category) => {
         return (
           <NavLink
