@@ -222,3 +222,10 @@
 .toCheckoutMiniCartButton:active {
   background-color: #118342;
 }
+
+@media (max-width: 1050px) {
+  .MiniCart {
+    position: absolute;
+    right: 30px;
+  }
+}

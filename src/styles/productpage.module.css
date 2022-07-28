@@ -1,5 +1,6 @@
 .ProductPage {
   display: flex;
+  flex-wrap: wrap;
   padding: 100px 10% 50px;
 }
 .productMiniPics {
@@ -144,4 +145,11 @@
   border: 1px solid #1d1f22;
   box-shadow: 0 0 0 1px #ffffff, 0 0 0 3px #5ece7b;
   cursor: pointer;
+}
+
+@media (max-width: 1050px) {
+  .productPicture {
+    width: 500px;
+    padding: 5px 30px;
+  }
 }
