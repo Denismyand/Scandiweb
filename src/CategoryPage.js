@@ -44,7 +44,7 @@ function Product({ product, currency, handleAddToCart }) {
         }}
       />
       <div className="productInfo">
-        <p>{product.name}</p>
+        <p>{product.brand + " " + product.name}</p>
         {product.prices.map((price) => {
           return (
             price.currency.label === currency.label && (

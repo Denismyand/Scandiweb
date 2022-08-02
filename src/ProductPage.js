@@ -2,6 +2,7 @@ import styles from "./styles/productpage.module.css";
 import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import DOMPurify from "dompurify";
 
 function getInitialAttributes(product) {
   let begin = [];
@@ -130,6 +131,8 @@ function ProductInfo({
   preDefineAttributes,
   handleAddToCart,
 }) {
+  const description = DOMPurify.sanitize(product.description);
+
   return (
     <>
       <p className={styles.brand}>{product.brand}</p>
@@ -167,7 +170,7 @@ function ProductInfo({
       </button>
       <div
         className={styles.productDescription}
-        dangerouslySetInnerHTML={{ __html: product.description }}
+        dangerouslySetInnerHTML={{ __html: description }}
       />
     </>
   );
