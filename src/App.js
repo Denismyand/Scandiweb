@@ -6,7 +6,7 @@ import { MainOverlay } from "./components/MainOverlay.js";
 import { Cart } from "./Cart.js";
 import { getProducts } from "./utils/request.js";
 import { useQuery } from "@apollo/client";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 export default function App() {
@@ -179,31 +179,24 @@ export default function App() {
         <Route
           path="/*"
           element={
-            <MainOverlay
-              isCurrActive={isCurrActive}
-              showCurrencyDropdown={showCurrencyDropdown}
-              cart={cart}
-              categories={data.categories}
-              currency={currency}
-              setCurrency={setCurrency}
-              getCartQuantity={getCartQuantity}
-              getPercentOfCartTotal={getPercentOfCartTotal}
-              handleSelectAttribute={handleSelectAttribute}
-              handleProductIsInCart={handleProductIsInCart}
-              handleDecreaseCartQuantity={handleDecreaseCartQuantity}
-            />
-          }
-        >
-          <Route
-            index
-            element={
-              <CategoryPage
+            <>
+              <MainOverlay
+                isCurrActive={isCurrActive}
+                showCurrencyDropdown={showCurrencyDropdown}
+                cart={cart}
                 categories={data.categories}
                 currency={currency}
-                handleAddToCart={handleAddToCart}
+                setCurrency={setCurrency}
+                getCartQuantity={getCartQuantity}
+                getPercentOfCartTotal={getPercentOfCartTotal}
+                handleSelectAttribute={handleSelectAttribute}
+                handleProductIsInCart={handleProductIsInCart}
+                handleDecreaseCartQuantity={handleDecreaseCartQuantity}
               />
-            }
-          />
+            </>
+          }
+        >
+          <Route index element={<Navigate to="/all" />} />
           <Route
             path={":categoryName"}
             element={
