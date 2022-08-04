@@ -1,5 +1,11 @@
 .cartEmptyMessage {
+  position: relative;
+  height: 450px;
   text-align: center;
+}
+.cartEmptyMessage * {
+  position: relative;
+  top: 40%;
 }
 .cartEmptyMessage p {
   font-size: 20px;
@@ -9,8 +15,8 @@
   opacity: 0.3;
   position: fixed;
   top: 60px;
-  width: 100%;
-  height: 10000px;
+  width: 100vw;
+  height: 100vh;
   z-index: 1;
 }
 .miniCart {
@@ -18,7 +24,8 @@
   right: 11%;
   top: 70px;
   width: 450px;
-  height: 700px;
+  min-height: 450px;
+  max-height: 700px;
   background-color: #ffffff;
   border: 0;
   z-index: 1;
@@ -110,8 +117,10 @@
 }
 .miniCartItemPicture {
   width: 160px;
+  height: 100%;
   padding-left: 20px;
-  height: 200px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .miniCartItemQuantity {

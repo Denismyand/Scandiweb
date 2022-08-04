@@ -1,16 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import "./styles/App.css";
 import { CategoryPage } from "./CategoryPage.js";
-import { ProductPage } from "./ProductPage.js";
+import { ProductPageWrapper } from "./ProductPage.js";
 import { MainOverlay } from "./components/MainOverlay.js";
 import { Cart } from "./Cart.js";
-import { getProducts } from "./utils/request.js";
-import { useQuery } from "@apollo/client";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 export default function App() {
-  const { loading, error, data } = useQuery(getProducts);
   const [isCurrActive, setIsCurrActive] = useState(false);
   const [currency, setCurrency] = useState({
     label: "USD",
@@ -171,8 +168,6 @@ export default function App() {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :</p>;
   return (
     <div onClick={() => isCurrActive && setIsCurrActive(false)}>
       <Routes>
@@ -184,7 +179,6 @@ export default function App() {
                 isCurrActive={isCurrActive}
                 showCurrencyDropdown={showCurrencyDropdown}
                 cart={cart}
-                categories={data.categories}
                 currency={currency}
                 setCurrency={setCurrency}
                 getCartQuantity={getCartQuantity}
@@ -201,7 +195,6 @@ export default function App() {
             path={":categoryName"}
             element={
               <CategoryPage
-                categories={data.categories}
                 currency={currency}
                 handleAddToCart={handleAddToCart}
               />
@@ -211,8 +204,7 @@ export default function App() {
           <Route
             path={":categoryName/:productId"}
             element={
-              <ProductPage
-                categories={data.categories}
+              <ProductPageWrapper
                 cart={cart}
                 setCart={setCart}
                 currency={currency}

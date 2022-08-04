@@ -1,15 +1,13 @@
 import { Link, useParams } from "react-router-dom";
-import { getCategoryData } from "./utils/request.js";
-import { useQuery } from "@apollo/client";
+import { useCategory } from "./utils/request.js";
 
 export function CategoryPage({ currency, handleAddToCart }) {
   const { categoryName } = useParams();
 
-  const { loading, error, data } = useQuery(getCategoryData(categoryName));
+  const { loading, error, data } = useCategory(categoryName);
   if (loading) return null;
   if (error) return `Error! ${error}`;
   const category = data.category;
-  console.log(category);
   return (
     <>
       <div className="categoryPage">

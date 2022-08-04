@@ -3,12 +3,12 @@ import { MiniCart } from "./MiniCart.js";
 import { Outlet, NavLink } from "react-router-dom";
 import { useState } from "react";
 import shopLogo from "../img/logo.svg";
+import { useCategories } from "../utils/request.js";
 
 export function MainOverlay({
   isCurrActive,
   showCurrencyDropdown,
   cart,
-  categories,
   currency,
   setCurrency,
   getCartQuantity,
@@ -30,7 +30,6 @@ export function MainOverlay({
     <>
       <Header
         cart={cart}
-        categories={categories}
         currency={currency}
         changeCurrency={changeCurrency}
         showCurrencyDropdown={showCurrencyDropdown}
@@ -57,7 +56,6 @@ export function MainOverlay({
 
 function Header({
   cart,
-  categories,
   currency,
   changeCurrency,
   showCurrencyDropdown,
@@ -65,6 +63,10 @@ function Header({
   showMiniCart,
   getCartQuantity,
 }) {
+  const { loading, error, data } = useCategories();
+  if (loading) return null;
+  if (error) return `Error! ${error}`;
+  const categories = data.categories;
   return (
     <div className="header">
       {categories.map((category) => {

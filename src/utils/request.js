@@ -1,8 +1,21 @@
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 
-export const getProducts = gql`
+export const getCategories = gql`
   query GetProducts {
     categories {
+      name
+    }
+  }
+`;
+
+export const useCategories = () => {
+  const { loading, error, data } = useQuery(getCategories);
+  return { loading, error, data };
+};
+
+const getCategory = gql`
+  query Category($categoryName: String!) {
+    category(input: { title: $categoryName }) {
       name
       products {
         id
@@ -34,12 +47,16 @@ export const getProducts = gql`
   }
 `;
 
-export function getCategoryData(categoryName) {
-  const getCategory = gql`
-query Category {
-  category(input: { title: "${categoryName}" }) {
-    name
-    products {
+export const useCategory = (categoryName) => {
+  const { loading, error, data } = useQuery(getCategory, {
+    variables: { categoryName },
+  });
+  return { loading, error, data };
+};
+
+const getProduct = gql`
+  query Product($productId: String!) {
+    product(id: $productId) {
       id
       name
       inStock
@@ -66,7 +83,11 @@ query Category {
       brand
     }
   }
-}
 `;
-  return getCategory;
-}
+
+export const useProduct = (productId) => {
+  const { loading, error, data } = useQuery(getProduct, {
+    variables: { productId },
+  });
+  return { loading, error, data };
+};

@@ -2,7 +2,8 @@ import styles from "./styles/productpage.module.css";
 import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import DOMPurify from "dompurify";
+import { sanitize } from "dompurify";
+import { useProduct } from "./utils/request.js";
 
 function getInitialAttributes(product) {
   let begin = [];
@@ -12,19 +13,36 @@ function getInitialAttributes(product) {
   return begin;
 }
 
-export function ProductPage({
+export function ProductPageWrapper({
   cart,
   setCart,
-  categories,
   currency,
   handleProductIsInCart,
 }) {
-  const { categoryName } = useParams();
   const { productId } = useParams();
-  const category = categories.find(
-    (category) => category.name === categoryName
+  const { loading, error, data } = useProduct(productId);
+
+  if (loading) return null;
+  if (error) return <p>Error :</p>;
+
+  return (
+    <ProductPage
+      product={data.product}
+      cart={cart}
+      setCart={setCart}
+      currency={currency}
+      handleProductIsInCart={handleProductIsInCart}
+    />
   );
-  const product = category.products.find((product) => product.id === productId);
+}
+
+function ProductPage({
+  product,
+  cart,
+  setCart,
+  currency,
+  handleProductIsInCart,
+}) {
   const [currImg, setCurrImg] = useState(0);
   const [attributes, setAttributes] = useState(getInitialAttributes(product));
 
@@ -131,8 +149,6 @@ function ProductInfo({
   preDefineAttributes,
   handleAddToCart,
 }) {
-  const description = DOMPurify.sanitize(product.description);
-
   return (
     <>
       <p className={styles.brand}>{product.brand}</p>
@@ -170,7 +186,7 @@ function ProductInfo({
       </button>
       <div
         className={styles.productDescription}
-        dangerouslySetInnerHTML={{ __html: description }}
+        dangerouslySetInnerHTML={{ __html: sanitize(product.description) }}
       />
     </>
   );
