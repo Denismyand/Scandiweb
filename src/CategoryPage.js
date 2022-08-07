@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useCategory } from "./utils/request.js";
+import styles from "./styles/categorypage.module.css";
 
 export function CategoryPage({ currency, handleAddToCart }) {
   const { categoryName } = useParams();
@@ -10,20 +11,18 @@ export function CategoryPage({ currency, handleAddToCart }) {
   const category = data.category;
   return (
     <>
-      <div className="categoryPage">
+      <div className={styles.categoryPage}>
         <h1> Category: {category.name}</h1>
-        <div className="productList">
-          {category.products.map((product) => {
-            return (
-              <Product
-                product={product}
-                currency={currency}
-                handleAddToCart={handleAddToCart}
-                key={product.id}
-              />
-            );
-          })}
-        </div>
+        {category.products.map((product) => {
+          return (
+            <Product
+              product={product}
+              currency={currency}
+              handleAddToCart={handleAddToCart}
+              key={product.id}
+            />
+          );
+        })}
       </div>
     </>
   );
@@ -33,26 +32,32 @@ function Product({ product, currency, handleAddToCart }) {
   return (
     <Link
       to={product.id}
-      className={product.inStock ? "product" : "outOfStockProduct"}
+      className={product.inStock ? styles.product : styles.outOfStockProduct}
     >
       {product.inStock ? null : (
-        <p className="outOfStockMessage">OUT OF STOCK</p>
+        <p className={styles.outOfStockMessage}>OUT OF STOCK</p>
       )}
-      <img className="productImg" src={product.gallery[0]} alt={product.name} />
+      <img
+        className={styles.productImg}
+        src={product.gallery[0]}
+        alt={product.name}
+      />
       <button
-        className="addToCartButton"
+        className={styles.addToCartButton}
         onClick={(e) => {
           e.preventDefault();
           handleAddToCart(product);
         }}
       />
-      <div className="productInfo">
+      <div className={styles.productInfo}>
         <p>{product.brand + " " + product.name}</p>
         {product.prices.map((price) => {
           return (
             price.currency.label === currency.label && (
               <p key={price.currency.label}>
-                <b className="price">{price.currency.symbol + price.amount}</b>
+                <b className={styles.price}>
+                  {price.currency.symbol + price.amount}
+                </b>
               </p>
             )
           );
