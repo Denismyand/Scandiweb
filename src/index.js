@@ -9,6 +9,8 @@ import {
   ApolloProvider,
   gql,
 } from "@apollo/client";
+import { store } from "./utils/store.js";
+import { Provider } from "react-redux";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -56,10 +58,12 @@ client.query({
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <ApolloProvider client={client}>
-    <React.StrictMode>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </React.StrictMode>
+    <Provider store={store}>
+      <React.StrictMode>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </React.StrictMode>
+    </Provider>
   </ApolloProvider>
 );

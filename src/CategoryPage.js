@@ -1,8 +1,10 @@
 import { Link, useParams } from "react-router-dom";
 import { useCategory } from "./utils/request.js";
 import styles from "./styles/categorypage.module.css";
+import { useSelector } from "react-redux";
 
-export function CategoryPage({ currency, handleAddToCart }) {
+
+export function CategoryPage({  handleAddToCart }) {
   const { categoryName } = useParams();
 
   const { loading, error, data } = useCategory(categoryName);
@@ -17,7 +19,6 @@ export function CategoryPage({ currency, handleAddToCart }) {
           return (
             <Product
               product={product}
-              currency={currency}
               handleAddToCart={handleAddToCart}
               key={product.id}
             />
@@ -28,7 +29,10 @@ export function CategoryPage({ currency, handleAddToCart }) {
   );
 }
 
-function Product({ product, currency, handleAddToCart }) {
+function Product({ product, handleAddToCart }) {
+  const currency = useSelector((state) => state.currency);
+
+
   return (
     <Link
       to={product.id}

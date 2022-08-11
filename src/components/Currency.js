@@ -1,45 +1,59 @@
 import arrowDown from "../img/down-arrow.svg";
 import arrowUp from "../img/up-arrow.svg";
+import { useDispatch, useSelector } from "react-redux";
 
-export function Currency({
-  currency,
-  changeCurrency,
-  showCurrencyDropdown,
-  isCurrActive,
-}) {
+export function Currency() {
+  const dispatch = useDispatch();
+
+  const currency = useSelector((state) => state.currency);
+
+  function showCurrencyDropdown() {
+    dispatch({ type: "DROPDOWN", payload: currency });
+  }
+
   return (
     <div className="currencySetting">
       <button
         className="currencyChoiserButton"
-        onClick={() => showCurrencyDropdown()}
+        onClick={(e) => {
+          e.stopPropagation();
+          showCurrencyDropdown();
+        }}
       >
-        {currency.sign + " "}
+        {currency.symbol + " "}
         <img
-          src={isCurrActive ? arrowUp : arrowDown}
+          src={currency.isActive ? arrowUp : arrowDown}
           width="10px"
           height="10px"
           alt=""
         />
       </button>
-      {isCurrActive && <CurrencyList changeCurrency={changeCurrency} />}
+      {currency.isActive && <CurrencyList />}
     </div>
   );
 }
 
-function CurrencyList({ changeCurrency }) {
+function CurrencyList() {
   const currencies = [
-    { label: "USD", symbol: "$" },
-    { label: "GBP", symbol: "£" },
-    { label: "AUD", symbol: "A$" },
-    { label: "JPY", symbol: "¥" },
+    { label: "USD", symbol: "$", isActive: false },
+    { label: "GBP", symbol: "£", isActive: false },
+    { label: "AUD", symbol: "A$", isActive: false },
+    { label: "JPY", symbol: "¥", isActive: false },
   ];
+
+  const dispatch = useDispatch();
+  function changeCurrency(currency) {
+    dispatch({ type: "CHANGE", payload: currency });
+  }
+
   return (
     <div className="currencyList">
       {currencies.map((currency) => (
         <p
           key={currency.label}
-          onClick={() => {
-            changeCurrency(currency.label, currency.symbol);
+          onClick={(e) => {
+            e.stopPropagation();
+            changeCurrency(currency);
           }}
         >
           {currency.symbol + " " + currency.label}

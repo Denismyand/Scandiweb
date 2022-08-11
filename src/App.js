@@ -6,13 +6,9 @@ import { MainOverlay } from "./components/MainOverlay.js";
 import { Cart } from "./Cart.js";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function App() {
-  const [isCurrActive, setIsCurrActive] = useState(false);
-  const [currency, setCurrency] = useState({
-    label: "USD",
-    sign: "$",
-  });
   const [cart, setCart] = useState(isCartCached());
 
   function isCartCached() {
@@ -22,8 +18,12 @@ export default function App() {
     return [];
   }
 
+  const dispatch = useDispatch();
+
+  const currency = useSelector((state) => state.currency);
+
   function showCurrencyDropdown() {
-    setIsCurrActive(!isCurrActive);
+    dispatch({ type: "DROPDOWN", payload: currency });
   }
 
   function getCartQuantity() {
@@ -44,7 +44,7 @@ export default function App() {
 
       return (total += cartItem.cartQuantity * itemPrice);
     });
-    return currency.sign + Math.round(total * (percent / 100) * 100) / 100;
+    return currency.symbol + Math.round(total * (percent / 100) * 100) / 100;
   }
 
   const maxCartQuantity = 5;
@@ -169,18 +169,14 @@ export default function App() {
   }, [cart]);
 
   return (
-    <div onClick={() => isCurrActive && setIsCurrActive(false)}>
+    <div onClick={() => currency.isActive && showCurrencyDropdown()}>
       <Routes>
         <Route
           path="/*"
           element={
             <>
               <MainOverlay
-                isCurrActive={isCurrActive}
-                showCurrencyDropdown={showCurrencyDropdown}
                 cart={cart}
-                currency={currency}
-                setCurrency={setCurrency}
                 getCartQuantity={getCartQuantity}
                 getPercentOfCartTotal={getPercentOfCartTotal}
                 handleSelectAttribute={handleSelectAttribute}
@@ -193,12 +189,7 @@ export default function App() {
           <Route index element={<Navigate to="/all" />} />
           <Route
             path={":categoryName"}
-            element={
-              <CategoryPage
-                currency={currency}
-                handleAddToCart={handleAddToCart}
-              />
-            }
+            element={<CategoryPage handleAddToCart={handleAddToCart} />}
           />
 
           <Route
@@ -207,7 +198,6 @@ export default function App() {
               <ProductPageWrapper
                 cart={cart}
                 setCart={setCart}
-                currency={currency}
                 handleProductIsInCart={handleProductIsInCart}
               />
             }
@@ -219,7 +209,6 @@ export default function App() {
               <Cart
                 cart={cart}
                 setCart={setCart}
-                currency={currency}
                 getPercentOfCartTotal={getPercentOfCartTotal}
                 getCartQuantity={getCartQuantity}
                 handleSelectAttribute={handleSelectAttribute}

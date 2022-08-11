@@ -1,11 +1,12 @@
 import styles from "../styles/minicart.module.css";
 import { Link } from "react-router-dom";
 import { ProductAttributes } from "./ProductAttributes.js";
+import { useSelector } from "react-redux";
+
 
 export function MiniCart({
   showMiniCart,
   cart,
-  currency,
   getCartQuantity,
   handleSelectAttribute,
   handleProductIsInCart,
@@ -26,7 +27,6 @@ export function MiniCart({
                 return (
                   <MiniCartItem
                     cartItem={cartItem}
-                    currency={currency}
                     handleSelectAttribute={handleSelectAttribute}
                     handleProductIsInCart={handleProductIsInCart}
                     handleDecreaseCartQuantity={handleDecreaseCartQuantity}
@@ -53,7 +53,6 @@ export function MiniCart({
 
 function MiniCartItem({
   cartItem,
-  currency,
   handleSelectAttribute,
   handleProductIsInCart,
   handleDecreaseCartQuantity,
@@ -61,7 +60,7 @@ function MiniCartItem({
   return (
     <div className={styles.miniCartItem}>
       <div className={styles.miniCartItemInfo}>
-        <MiniCartItemInfo cartItem={cartItem} currency={currency} />
+        <MiniCartItemInfo cartItem={cartItem} />
         <ProductAttributes
           product={cartItem}
           handleSelectAttribute={handleSelectAttribute}
@@ -88,7 +87,9 @@ function MiniCartItem({
   );
 }
 
-function MiniCartItemInfo({ cartItem, currency }) {
+function MiniCartItemInfo({ cartItem }) {
+  const currency = useSelector((state) => state.currency);
+
   return (
     <>
       <p className={styles.miniCartItemName}>{cartItem.brand}</p>

@@ -5,23 +5,19 @@ import { useState } from "react";
 import shopLogo from "../img/logo.svg";
 import { useCategories } from "../utils/request.js";
 
+
 export function MainOverlay({
-  isCurrActive,
-  showCurrencyDropdown,
   cart,
-  currency,
-  setCurrency,
   getCartQuantity,
   getPercentOfCartTotal,
   handleSelectAttribute,
   handleProductIsInCart,
   handleDecreaseCartQuantity,
 }) {
+  
   const [miniCartActive, setMiniCartActive] = useState(false);
+  
 
-  function changeCurrency(curr, currSign) {
-    setCurrency({ label: curr, sign: currSign });
-  }
 
   function showMiniCart() {
     setMiniCartActive(!miniCartActive);
@@ -30,10 +26,6 @@ export function MainOverlay({
     <>
       <Header
         cart={cart}
-        currency={currency}
-        changeCurrency={changeCurrency}
-        showCurrencyDropdown={showCurrencyDropdown}
-        isCurrActive={isCurrActive}
         showMiniCart={showMiniCart}
         getCartQuantity={getCartQuantity}
       />
@@ -41,7 +33,6 @@ export function MainOverlay({
         <MiniCart
           showMiniCart={showMiniCart}
           cart={cart}
-          currency={currency}
           getCartQuantity={getCartQuantity}
           getPercentOfCartTotal={getPercentOfCartTotal}
           handleSelectAttribute={handleSelectAttribute}
@@ -56,10 +47,6 @@ export function MainOverlay({
 
 function Header({
   cart,
-  currency,
-  changeCurrency,
-  showCurrencyDropdown,
-  isCurrActive,
   showMiniCart,
   getCartQuantity,
 }) {
@@ -83,12 +70,7 @@ function Header({
         );
       })}
       <img className="logo" src={shopLogo} alt="logo" />
-      <Currency
-        currency={currency}
-        changeCurrency={changeCurrency}
-        showCurrencyDropdown={showCurrencyDropdown}
-        isCurrActive={isCurrActive}
-      />
+      <Currency/>
       <button className="headerCartButton" onClick={showMiniCart}>
         {cart.length > 0 && (
           <span className="headerCartQuantity">{getCartQuantity()}</span>

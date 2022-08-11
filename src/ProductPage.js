@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { sanitize } from "dompurify";
 import { useProduct } from "./utils/request.js";
+import { useSelector } from "react-redux";
+
 
 function getInitialAttributes(product) {
   let begin = [];
@@ -16,7 +18,6 @@ function getInitialAttributes(product) {
 export function ProductPageWrapper({
   cart,
   setCart,
-  currency,
   handleProductIsInCart,
 }) {
   const { productId } = useParams();
@@ -30,7 +31,6 @@ export function ProductPageWrapper({
       product={data.product}
       cart={cart}
       setCart={setCart}
-      currency={currency}
       handleProductIsInCart={handleProductIsInCart}
     />
   );
@@ -40,7 +40,6 @@ function ProductPage({
   product,
   cart,
   setCart,
-  currency,
   handleProductIsInCart,
 }) {
   const [currImg, setCurrImg] = useState(0);
@@ -132,7 +131,6 @@ function ProductPage({
       <div className={styles.productInfo}>
         <ProductInfo
           product={product}
-          currency={currency}
           attributes={attributes}
           preDefineAttributes={preDefineAttributes}
           handleAddToCart={handleAddToCart}
@@ -144,11 +142,13 @@ function ProductPage({
 
 function ProductInfo({
   product,
-  currency,
   attributes,
   preDefineAttributes,
   handleAddToCart,
 }) {
+  const currency = useSelector((state) => state.currency);
+
+
   return (
     <>
       <p className={styles.brand}>{product.brand}</p>

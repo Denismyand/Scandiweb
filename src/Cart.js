@@ -1,11 +1,11 @@
 import styles from "./styles/cart.module.css";
 import { useState } from "react";
 import { ProductAttributes } from "./components/ProductAttributes.js";
+import { useSelector } from "react-redux";
 
 export function Cart({
   cart,
   setCart,
-  currency,
   getPercentOfCartTotal,
   getCartQuantity,
   handleSelectAttribute,
@@ -22,7 +22,6 @@ export function Cart({
               return (
                 <CartItem
                   cartItem={cartItem}
-                  currency={currency}
                   handleSelectAttribute={handleSelectAttribute}
                   handleProductIsInCart={handleProductIsInCart}
                   handleDecreaseCartQuantity={handleDecreaseCartQuantity}
@@ -49,7 +48,6 @@ export function Cart({
 
 function CartItem({
   cartItem,
-  currency,
   handleSelectAttribute,
   handleProductIsInCart,
   handleDecreaseCartQuantity,
@@ -59,7 +57,7 @@ function CartItem({
       <hr />
       <div className={styles.cartItem}>
         <div className={styles.cartItemInfo}>
-          <CartItemInfo cartItem={cartItem} currency={currency} />
+          <CartItemInfo cartItem={cartItem} />
           <ProductAttributes
             product={cartItem}
             handleSelectAttribute={handleSelectAttribute}
@@ -82,7 +80,9 @@ function CartItem({
     </div>
   );
 }
-function CartItemInfo({ cartItem, currency }) {
+function CartItemInfo({ cartItem }) {
+  const currency = useSelector((state) => state.currency);
+
   return (
     <>
       <p className={styles.brand}>{cartItem.brand}</p>
