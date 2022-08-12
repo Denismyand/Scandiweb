@@ -6,11 +6,11 @@ const currency = {
 
 export const currencyReducer = (state = currency, action) => {
   switch (action.type) {
-    case "CHANGE": {
+    case "changeCurrency": {
       return action.payload;
     }
-    case "DROPDOWN": {
-      return { ...state, isActive: !action.payload.isActive };
+    case "currencyDropdown": {
+      return { ...state, isActive: !state.isActive };
     }
     default: {
       return state;

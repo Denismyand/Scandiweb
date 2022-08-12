@@ -1,55 +1,30 @@
 import { Currency } from "./Currency.js";
 import { MiniCart } from "./MiniCart.js";
 import { Outlet, NavLink } from "react-router-dom";
-import { useState } from "react";
 import shopLogo from "../img/logo.svg";
 import { useCategories } from "../utils/request.js";
+import { getCartQuantity } from "../utils/reusableFunctions.js";
+import { useDispatch, useSelector } from "react-redux";
 
+export function MainOverlay() {
+  const miniCartActive = useSelector((state) => state.cart.isActive);
 
-export function MainOverlay({
-  cart,
-  getCartQuantity,
-  getPercentOfCartTotal,
-  handleSelectAttribute,
-  handleProductIsInCart,
-  handleDecreaseCartQuantity,
-}) {
-  
-  const [miniCartActive, setMiniCartActive] = useState(false);
-  
-
-
-  function showMiniCart() {
-    setMiniCartActive(!miniCartActive);
-  }
   return (
     <>
-      <Header
-        cart={cart}
-        showMiniCart={showMiniCart}
-        getCartQuantity={getCartQuantity}
-      />
-      {miniCartActive && (
-        <MiniCart
-          showMiniCart={showMiniCart}
-          cart={cart}
-          getCartQuantity={getCartQuantity}
-          getPercentOfCartTotal={getPercentOfCartTotal}
-          handleSelectAttribute={handleSelectAttribute}
-          handleProductIsInCart={handleProductIsInCart}
-          handleDecreaseCartQuantity={handleDecreaseCartQuantity}
-        />
-      )}
+      <Header />
+      {miniCartActive && <MiniCart />}
       <Outlet />
     </>
   );
 }
 
-function Header({
-  cart,
-  showMiniCart,
-  getCartQuantity,
-}) {
+function Header() {
+  const cart = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch();
+
+  function showMiniCart() {
+    dispatch({ type: "showMiniCart", payload: "" });
+  }
   const { loading, error, data } = useCategories();
   if (loading) return null;
   if (error) return `Error! ${error}`;
@@ -70,10 +45,10 @@ function Header({
         );
       })}
       <img className="logo" src={shopLogo} alt="logo" />
-      <Currency/>
+      <Currency />
       <button className="headerCartButton" onClick={showMiniCart}>
         {cart.length > 0 && (
-          <span className="headerCartQuantity">{getCartQuantity()}</span>
+          <span className="headerCartQuantity">{getCartQuantity(cart)}</span>
         )}
       </button>
     </div>

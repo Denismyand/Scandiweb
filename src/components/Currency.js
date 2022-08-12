@@ -6,9 +6,10 @@ export function Currency() {
   const dispatch = useDispatch();
 
   const currency = useSelector((state) => state.currency);
+  const currencyIsActive = useSelector((state) => state.currency.isActive);
 
   function showCurrencyDropdown() {
-    dispatch({ type: "DROPDOWN", payload: currency });
+    dispatch({ type: "currencyDropdown", payload: "" });
   }
 
   return (
@@ -22,13 +23,13 @@ export function Currency() {
       >
         {currency.symbol + " "}
         <img
-          src={currency.isActive ? arrowUp : arrowDown}
+          src={currencyIsActive ? arrowUp : arrowDown}
           width="10px"
           height="10px"
           alt=""
         />
       </button>
-      {currency.isActive && <CurrencyList />}
+      {currencyIsActive && <CurrencyList />}
     </div>
   );
 }
@@ -43,7 +44,7 @@ function CurrencyList() {
 
   const dispatch = useDispatch();
   function changeCurrency(currency) {
-    dispatch({ type: "CHANGE", payload: currency });
+    dispatch({ type: "changeCurrency", payload: currency });
   }
 
   return (

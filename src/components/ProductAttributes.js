@@ -1,4 +1,14 @@
-export function ProductAttributes({ product, handleSelectAttribute, styles }) {
+import { useDispatch } from "react-redux";
+
+
+export function ProductAttributes({ product, styles }) {
+
+  const dispatch = useDispatch();
+
+  function handleSelectAttribute(product, attribute, id) {
+    dispatch({ type: "selectAttribute", payload: {product, attribute, id} });
+  }
+  
   function differAttributes(attribute) {
     return (
       <>
@@ -51,3 +61,4 @@ export function ProductAttributes({ product, handleSelectAttribute, styles }) {
     </>
   );
 }
+

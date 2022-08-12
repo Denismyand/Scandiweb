@@ -1,11 +1,9 @@
 import styles from "./styles/productpage.module.css";
 import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 import { sanitize } from "dompurify";
 import { useProduct } from "./utils/request.js";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
 
 function getInitialAttributes(product) {
   let begin = [];
@@ -15,92 +13,18 @@ function getInitialAttributes(product) {
   return begin;
 }
 
-export function ProductPageWrapper({
-  cart,
-  setCart,
-  handleProductIsInCart,
-}) {
+export function ProductPageWrapper() {
   const { productId } = useParams();
   const { loading, error, data } = useProduct(productId);
 
   if (loading) return null;
   if (error) return <p>Error :</p>;
 
-  return (
-    <ProductPage
-      product={data.product}
-      cart={cart}
-      setCart={setCart}
-      handleProductIsInCart={handleProductIsInCart}
-    />
-  );
+  return <ProductPage product={data.product} />;
 }
 
-function ProductPage({
-  product,
-  cart,
-  setCart,
-  handleProductIsInCart,
-}) {
+function ProductPage({ product }) {
   const [currImg, setCurrImg] = useState(0);
-  const [attributes, setAttributes] = useState(getInitialAttributes(product));
-
-  function preDefineAttributes(attributeIndex, itemIndex) {
-    let newAttributes = attributes.map((attribute, i) => {
-      if (i !== attributeIndex) return attribute;
-      return { index: itemIndex };
-    });
-    setAttributes(newAttributes);
-  }
-
-  function handleAddToCart(product) {
-    if (cart.length > 0) {
-      let foundInCart = cart.find(
-        (cartItem) => cartItem.id === product.id && isSame(cartItem)
-      );
-      if (foundInCart) {
-        if (isSame(foundInCart)) return handleProductIsInCart(foundInCart);
-      }
-    }
-    return handleProductIsNotInCart(product);
-  }
-
-  const similarity = useRef(true);
-
-  function isSame(foundInCart) {
-    similarity.current = true;
-    foundInCart.attributes.forEach((attribute, i) => {
-      attribute.items.forEach((item, itemIndex) => {
-        if (itemIndex === attributes[i].index) {
-          if (!item.selectedItem) {
-            similarity.current = false;
-          }
-        }
-      });
-    });
-    return similarity.current;
-  }
-
-  function handleProductIsNotInCart(product) {
-    let newAttributes = product.attributes.map((attribute, i) => {
-      let newItems = attribute.items.map((item, index) => {
-        if (index === attributes[i].index) {
-          return { ...item, selectedItem: true };
-        }
-        return item;
-      });
-      return { ...attribute, items: newItems };
-    });
-    setCart([
-      ...cart,
-      {
-        ...product,
-        attributes: newAttributes,
-        cartItemId: uuidv4(),
-        cartQuantity: 1,
-      },
-    ]);
-  }
 
   function changeImage(imgIndex) {
     setCurrImg(imgIndex);
@@ -129,25 +53,65 @@ function ProductPage({
         alt=""
       />
       <div className={styles.productInfo}>
-        <ProductInfo
-          product={product}
-          attributes={attributes}
-          preDefineAttributes={preDefineAttributes}
-          handleAddToCart={handleAddToCart}
-        />
+        <ProductInfo product={product} />
       </div>
     </div>
   );
 }
 
-function ProductInfo({
-  product,
-  attributes,
-  preDefineAttributes,
-  handleAddToCart,
-}) {
+function ProductInfo({ product }) {
+  const [attributes, setAttributes] = useState(getInitialAttributes(product));
   const currency = useSelector((state) => state.currency);
+  const cart = useSelector((state) => state.cart.items);
 
+  function preDefineAttributes(attributeIndex, itemIndex) {
+    let newAttributes = attributes.map((attribute, i) => {
+      if (i !== attributeIndex) return attribute;
+      return { index: itemIndex };
+    });
+    setAttributes(newAttributes);
+  }
+
+  function handleAddToCart(product) {
+    if (cart.length > 0) {
+      let foundInCart = cart.find(
+        (cartItem) => cartItem.id === product.id && isSame(cartItem)
+      );
+      if (foundInCart) {
+        if (isSame(foundInCart)) return handleProductIsInCart(foundInCart);
+      }
+    }
+    return handleProductPageProductIsNotInCart(product, attributes);
+  }
+
+  const similarity = useRef(true);
+
+  function isSame(foundInCart) {
+    similarity.current = true;
+    foundInCart.attributes.forEach((attribute, i) => {
+      attribute.items.forEach((item, itemIndex) => {
+        if (itemIndex === attributes[i].index) {
+          if (!item.selectedItem) {
+            similarity.current = false;
+          }
+        }
+      });
+    });
+    return similarity.current;
+  }
+
+  const dispatch = useDispatch();
+
+  function handleProductIsInCart(foundInCart) {
+    dispatch({ type: "productIsInCart", payload: foundInCart });
+  }
+
+  function handleProductPageProductIsNotInCart(product, attributes) {
+    dispatch({
+      type: "productPageProductIsNotInCart",
+      payload: { product, attributes },
+    });
+  }
 
   return (
     <>

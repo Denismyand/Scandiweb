@@ -1,10 +1,10 @@
 import { Link, useParams } from "react-router-dom";
 import { useCategory } from "./utils/request.js";
 import styles from "./styles/categorypage.module.css";
-import { useSelector } from "react-redux";
+import { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-
-export function CategoryPage({  handleAddToCart }) {
+export function CategoryPage() {
   const { categoryName } = useParams();
 
   const { loading, error, data } = useCategory(categoryName);
@@ -16,22 +16,55 @@ export function CategoryPage({  handleAddToCart }) {
       <div className={styles.categoryPage}>
         <h1> Category: {category.name}</h1>
         {category.products.map((product) => {
-          return (
-            <Product
-              product={product}
-              handleAddToCart={handleAddToCart}
-              key={product.id}
-            />
-          );
+          return <Product product={product} key={product.id} />;
         })}
       </div>
     </>
   );
 }
 
-function Product({ product, handleAddToCart }) {
+function Product({ product }) {
   const currency = useSelector((state) => state.currency);
 
+  const cart = useSelector((state) => state.cart.items);
+
+  const dispatch = useDispatch();
+
+  function handleAddToCart(product) {
+    if (cart.length > 0) {
+      let foundInCart = cart.find(
+        (cartItem) => cartItem.id === product.id && isSame(cartItem)
+      );
+      if (foundInCart) {
+        if (isSame(foundInCart)) return handleProductIsInCart(foundInCart);
+      }
+    }
+    return handleProductIsNotInCart(product);
+  }
+
+  const similarity = useRef(true);
+
+  function isSame(foundInCart) {
+    similarity.current = true;
+    foundInCart.attributes.forEach((attribute) => {
+      attribute.items.forEach((item, itemIndex) => {
+        if (itemIndex === 0) {
+          if (!item.selectedItem) {
+            similarity.current = false;
+          }
+        }
+      });
+    });
+    return similarity.current;
+  }
+
+  function handleProductIsInCart(foundInCart) {
+    dispatch({ type: "productIsInCart", payload: foundInCart });
+  }
+
+  function handleProductIsNotInCart(product) {
+    dispatch({ type: "productIsNotInCart", payload: product });
+  }
 
   return (
     <Link

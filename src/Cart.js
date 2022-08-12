@@ -1,17 +1,13 @@
 import styles from "./styles/cart.module.css";
 import { useState } from "react";
 import { ProductAttributes } from "./components/ProductAttributes.js";
-import { useSelector } from "react-redux";
-
-export function Cart({
-  cart,
-  setCart,
-  getPercentOfCartTotal,
+import { useSelector, useDispatch } from "react-redux";
+import {
   getCartQuantity,
-  handleSelectAttribute,
-  handleProductIsInCart,
-  handleDecreaseCartQuantity,
-}) {
+  getPercentOfCartTotal,
+} from "./utils/reusableFunctions";
+
+export function Cart({ cart }) {
   return (
     <div className={styles.cartPage}>
       <h1>CART</h1>
@@ -19,22 +15,10 @@ export function Cart({
         <>
           <div>
             {cart.map((cartItem) => {
-              return (
-                <CartItem
-                  cartItem={cartItem}
-                  handleSelectAttribute={handleSelectAttribute}
-                  handleProductIsInCart={handleProductIsInCart}
-                  handleDecreaseCartQuantity={handleDecreaseCartQuantity}
-                  key={cartItem.cartItemId}
-                />
-              );
+              return <CartItem cartItem={cartItem} key={cartItem.cartItemId} />;
             })}
           </div>
-          <CartTotal
-            setCart={setCart}
-            getPercentOfCartTotal={getPercentOfCartTotal}
-            getCartQuantity={getCartQuantity}
-          />
+          <CartTotal cart={cart} />
         </>
       ) : (
         <div className={styles.cartEmptyMessage}>
@@ -46,23 +30,24 @@ export function Cart({
   );
 }
 
-function CartItem({
-  cartItem,
-  handleSelectAttribute,
-  handleProductIsInCart,
-  handleDecreaseCartQuantity,
-}) {
+function CartItem({ cartItem }) {
+  const dispatch = useDispatch();
+
+  function handleProductIsInCart(foundInCart) {
+    dispatch({ type: "productIsInCart", payload: foundInCart });
+  }
+
+  function handleDecreaseCartQuantity(product) {
+    dispatch({ type: "decreaseCartQuantity", payload: product });
+  }
+
   return (
     <div>
       <hr />
       <div className={styles.cartItem}>
         <div className={styles.cartItemInfo}>
           <CartItemInfo cartItem={cartItem} />
-          <ProductAttributes
-            product={cartItem}
-            handleSelectAttribute={handleSelectAttribute}
-            styles={styles}
-          />
+          <ProductAttributes product={cartItem} styles={styles} />
         </div>
         <div className={styles.cartItemQuantity}>
           <button
@@ -80,6 +65,7 @@ function CartItem({
     </div>
   );
 }
+
 function CartItemInfo({ cartItem }) {
   const currency = useSelector((state) => state.currency);
 
@@ -102,12 +88,14 @@ function CartItemInfo({ cartItem }) {
 
 function CartItemPicture({ cartItem }) {
   const [currentImg, setCurrentImg] = useState(0);
+
   function nextImg() {
     setCurrentImg(currentImg + 1);
     if (currentImg === cartItem.gallery.length - 1) {
       setCurrentImg(0);
     }
   }
+
   function prevImg() {
     setCurrentImg(currentImg - 1);
     if (currentImg === 0) {
@@ -136,7 +124,15 @@ function CartItemPicture({ cartItem }) {
   );
 }
 
-function CartTotal({ setCart, getPercentOfCartTotal, getCartQuantity }) {
+function CartTotal({ cart }) {
+  const currency = useSelector((state) => state.currency);
+
+  const dispatch = useDispatch();
+
+  function emptyCart() {
+    dispatch({ type: "setToEmpty", payload: "" });
+  }
+
   const tax = 21;
   return (
     <>
@@ -149,17 +145,17 @@ function CartTotal({ setCart, getPercentOfCartTotal, getCartQuantity }) {
         </div>
         <div>
           <p>
-            <b>{getPercentOfCartTotal(tax)}</b>
+            <b>{getPercentOfCartTotal(tax, cart, currency)}</b>
           </p>
           <p>
-            <b>{getCartQuantity()}</b>
+            <b>{getCartQuantity(cart)}</b>
           </p>
           <p>
-            <b>{getPercentOfCartTotal(100)}</b>
+            <b>{getPercentOfCartTotal(100, cart, currency)}</b>
           </p>
         </div>
       </div>
-      <button className={styles.orderButton} onClick={() => setCart([])}>
+      <button className={styles.orderButton} onClick={() => emptyCart()}>
         ORDER
       </button>
     </>

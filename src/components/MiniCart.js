@@ -1,18 +1,21 @@
 import styles from "../styles/minicart.module.css";
 import { Link } from "react-router-dom";
 import { ProductAttributes } from "./ProductAttributes.js";
-import { useSelector } from "react-redux";
-
-
-export function MiniCart({
-  showMiniCart,
-  cart,
+import { useSelector, useDispatch } from "react-redux";
+import {
   getCartQuantity,
-  handleSelectAttribute,
-  handleProductIsInCart,
-  handleDecreaseCartQuantity,
   getPercentOfCartTotal,
-}) {
+} from "../utils/reusableFunctions";
+
+export function MiniCart() {
+  const cart = useSelector((state) => state.cart.items);
+
+  const dispatch = useDispatch();
+
+  function showMiniCart() {
+    dispatch({ type: "showMiniCart", payload: "" });
+  }
+
   return (
     <>
       <div className={styles.miniCartBackground} onClick={showMiniCart} />
@@ -20,25 +23,16 @@ export function MiniCart({
         {cart.length > 0 ? (
           <>
             <p className={styles.miniCartItemsQuantity}>
-              <b>My Cart,</b> <span>{getCartQuantity()} items</span>
+              <b>My Cart,</b> <span>{getCartQuantity(cart)} items</span>
             </p>
             <div>
               {cart.map((cartItem) => {
                 return (
-                  <MiniCartItem
-                    cartItem={cartItem}
-                    handleSelectAttribute={handleSelectAttribute}
-                    handleProductIsInCart={handleProductIsInCart}
-                    handleDecreaseCartQuantity={handleDecreaseCartQuantity}
-                    key={cartItem.cartItemId}
-                  />
+                  <MiniCartItem cartItem={cartItem} key={cartItem.cartItemId} />
                 );
               })}
             </div>
-            <MiniCartTotal
-              showMiniCart={showMiniCart}
-              getPercentOfCartTotal={getPercentOfCartTotal}
-            />
+            <MiniCartTotal cart={cart} />
           </>
         ) : (
           <div className={styles.cartEmptyMessage}>
@@ -51,21 +45,22 @@ export function MiniCart({
   );
 }
 
-function MiniCartItem({
-  cartItem,
-  handleSelectAttribute,
-  handleProductIsInCart,
-  handleDecreaseCartQuantity,
-}) {
+function MiniCartItem({ cartItem }) {
+  const dispatch = useDispatch();
+
+  function handleProductIsInCart(foundInCart) {
+    dispatch({ type: "productIsInCart", payload: foundInCart });
+  }
+
+  function handleDecreaseCartQuantity(product) {
+    dispatch({ type: "decreaseCartQuantity", payload: product });
+  }
+
   return (
     <div className={styles.miniCartItem}>
       <div className={styles.miniCartItemInfo}>
         <MiniCartItemInfo cartItem={cartItem} />
-        <ProductAttributes
-          product={cartItem}
-          handleSelectAttribute={handleSelectAttribute}
-          styles={styles}
-        />
+        <ProductAttributes product={cartItem} styles={styles} />
       </div>
       <div className={styles.miniCartItemQuantity}>
         <button
@@ -107,7 +102,9 @@ function MiniCartItemInfo({ cartItem }) {
   );
 }
 
-function MiniCartTotal({ showMiniCart, getPercentOfCartTotal }) {
+function MiniCartTotal({ cart, showMiniCart }) {
+  const currency = useSelector((state) => state.currency);
+
   return (
     <div className={styles.miniCartTotal}>
       <div className={styles.miniCartTotalLeft}>
@@ -121,7 +118,7 @@ function MiniCartTotal({ showMiniCart, getPercentOfCartTotal }) {
         </Link>
       </div>
       <div className={styles.miniCartTotalRight}>
-        <b>{getPercentOfCartTotal(100)}</b>
+        <b>{getPercentOfCartTotal(100, cart, currency)}</b>
         <Link
           className={styles.toCheckoutMiniCartButton}
           to="/cart"
