@@ -9,7 +9,7 @@ import {
   ApolloProvider,
   gql,
 } from "@apollo/client";
-import { store } from "./utils/store.js";
+import { store } from "./utils/store";
 import { Provider } from "react-redux";
 
 const client = new ApolloClient({

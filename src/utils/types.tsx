@@ -24,6 +24,7 @@ export type cartContent = {
 };
 
 export type attributesInfo = {
+  index: number;
   id: string;
   name: string;
   type: string;
