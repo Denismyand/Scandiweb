@@ -1,21 +1,23 @@
+import React from "react";
 import { Link, useParams } from "react-router-dom";
 import { useCategory } from "./utils/request";
 import styles from "./styles/categorypage.module.css";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { CartContent, CartReducer, PricesInfo } from "./utils/types";
 
 export function CategoryPage() {
   const { categoryName } = useParams();
 
   const { loading, error, data } = useCategory(categoryName);
   if (loading) return null;
-  if (error) return `Error! ${error}`;
+  if (error) return <>`Error! {error}`</>;
   const category = data.category;
   return (
     <>
       <div className={styles.categoryPage}>
         <h1> Category: {category.name}</h1>
-        {category.products.map((product) => {
+        {category.products.map((product: CartContent) => {
           return <Product product={product} key={product.id} />;
         })}
       </div>
@@ -23,17 +25,18 @@ export function CategoryPage() {
   );
 }
 
-function Product({ product }) {
-  const currency = useSelector((state) => state.currency);
+function Product({ product }: { product: CartContent }) {
+  const currency = useSelector((state: PricesInfo) => state.currency);
 
-  const cart = useSelector((state) => state.cart.items);
+  const cart = useSelector((state: CartReducer) => state.cart.items);
 
   const dispatch = useDispatch();
 
-  function handleAddToCart(product) {
+  function handleAddToCart(product: CartContent) {
     if (cart.length > 0) {
       let foundInCart = cart.find(
-        (cartItem) => cartItem.id === product.id && isSame(cartItem)
+        (cartItem: CartContent) =>
+          cartItem.id === product.id && isSame(cartItem)
       );
       if (foundInCart) {
         if (isSame(foundInCart)) return handleProductIsInCart(foundInCart);
@@ -44,7 +47,7 @@ function Product({ product }) {
 
   const similarity = useRef(true);
 
-  function isSame(foundInCart) {
+  function isSame(foundInCart: CartContent) {
     similarity.current = true;
     foundInCart.attributes.forEach((attribute) => {
       attribute.items.forEach((item, itemIndex) => {
@@ -58,11 +61,11 @@ function Product({ product }) {
     return similarity.current;
   }
 
-  function handleProductIsInCart(foundInCart) {
+  function handleProductIsInCart(foundInCart: CartContent) {
     dispatch({ type: "productIsInCart", payload: foundInCart });
   }
 
-  function handleProductIsNotInCart(product) {
+  function handleProductIsNotInCart(product: CartContent) {
     dispatch({ type: "productIsNotInCart", payload: product });
   }
 

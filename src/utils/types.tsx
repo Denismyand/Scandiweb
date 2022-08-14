@@ -1,15 +1,15 @@
-export type prices = { prices: pricesInfo[] };
+export type Prices = { prices: PricesInfo[] };
 
-export type cartReducer = { cart: cartInfo };
+export type CartReducer = { cart: CartInfo };
 
-export type cartInfo = { isActive: boolean; items: cartContent[] };
+export type CartInfo = { isActive: boolean; items: CartContent[] };
 
-export type categoryInfo = {
+export type CategoryInfo = {
   name: string;
-  products: cartContent[];
+  products: CartContent[];
 };
 
-export type cartContent = {
+export type CartContent = {
   id: string;
   name: string;
   brand: string;
@@ -17,33 +17,35 @@ export type cartContent = {
   gallery: string[];
   description: string;
   category: string;
-  attributes: attributesInfo[];
+  attributes: AttributesInfo[];
   cartQuantity: number;
-  prices: pricesInfo[];
+  prices: PricesInfo[];
   cartItemId: string;
 };
 
-export type attributesInfo = {
+export type AttributesInfo = {
   index: number;
   id: string;
   name: string;
   type: string;
-  items: itemsInfo[];
+  items: ItemsInfo[];
 };
 
-export type itemsInfo = {
+export type PredefinedAttrebutes = Pick<AttributesInfo, "index">;
+
+export type ItemsInfo = {
   displayValue: string;
   value: string;
   id: string;
   selectedItem: boolean;
 };
 
-export type pricesInfo = {
-  currency: currencyInfo;
+export type PricesInfo = {
+  currency: CurrencyInfo;
   amount: number;
 };
 
-export type currencyInfo = {
+export type CurrencyInfo = {
   isActive?: boolean;
   label: string;
   symbol: string;

@@ -1,13 +1,13 @@
-import { cartContent, currencyInfo } from "../utils/types";
+import { CartContent, CurrencyInfo } from "../utils/types";
 
-export function getCartQuantity(cart: cartContent[]) {
+export function getCartQuantity(cart: CartContent[]) {
   return cart.reduce((total, current) => total + current.cartQuantity, 0);
 }
 
 export function getPercentOfCartTotal(
   percent: number,
-  cart: cartContent[],
-  currency: currencyInfo
+  cart: CartContent[],
+  currency: CurrencyInfo
 ) {
   let total = 0;
 

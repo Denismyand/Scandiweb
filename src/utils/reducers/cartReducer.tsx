@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { attributesInfo, cartContent } from "../types";
+import { AttributesInfo, CartContent } from "../types";
 
 type Action =
   | showMiniCart
@@ -21,14 +21,14 @@ type productIsInCart = {
 
 type productIsNotInCart = {
   type: "productIsNotInCart";
-  payload: { attributes: attributesInfo[] };
+  payload: { attributes: AttributesInfo[] };
 };
 
 type productPageProductIsNotInCart = {
   type: "productPageProductIsNotInCart";
   payload: {
-    product: { attributes: attributesInfo[] };
-    attributes: attributesInfo[];
+    product: { attributes: AttributesInfo[] };
+    attributes: { index: number }[];
   };
 };
 
@@ -39,7 +39,7 @@ type decreaseCartQuantity = {
 
 type selectAttribute = {
   type: "selectAttribute";
-  payload: { id: string; attribute: { id: string }; product: cartContent };
+  payload: { id: string; attribute: { id: string }; product: CartContent };
 };
 
 type setToEmpty = {
@@ -65,7 +65,7 @@ export const cartReducer = (state = cart, action: Action) => {
     }
 
     case "productIsInCart": {
-      let nextCart = state.items.map((cartItem: cartContent) => {
+      let nextCart = state.items.map((cartItem: CartContent) => {
         if (cartItem.cartItemId === action.payload.cartItemId) {
           if (action.payload.cartQuantity >= maxCartQuantity) {
             return { ...action.payload, cartQuantity: Number(maxCartQuantity) };
@@ -82,7 +82,7 @@ export const cartReducer = (state = cart, action: Action) => {
 
     case "productIsNotInCart": {
       let newAttributes = action.payload.attributes.map(
-        (attribute: attributesInfo) => {
+        (attribute: AttributesInfo) => {
           let newItems = attribute.items.map((item, i) => {
             if (i === 0) {
               return { ...item, selectedItem: true };
@@ -108,7 +108,7 @@ export const cartReducer = (state = cart, action: Action) => {
 
     case "productPageProductIsNotInCart": {
       let newAttributes = action.payload.product.attributes.map(
-        (attribute: attributesInfo, i: number) => {
+        (attribute: AttributesInfo, i: number) => {
           let newItems = attribute.items.map((item, index) => {
             if (index === action.payload.attributes[i].index) {
               return { ...item, selectedItem: true };
@@ -134,7 +134,7 @@ export const cartReducer = (state = cart, action: Action) => {
 
     case "decreaseCartQuantity": {
       if (action.payload.cartQuantity > 1) {
-        let decreased = state.items.map((cartItem: cartContent) => {
+        let decreased = state.items.map((cartItem: CartContent) => {
           if (cartItem.cartItemId === action.payload.cartItemId) {
             return {
               ...cartItem,
@@ -149,7 +149,7 @@ export const cartReducer = (state = cart, action: Action) => {
       return {
         ...state,
         items: state.items.filter(
-          (cartItem: cartContent) =>
+          (cartItem: CartContent) =>
             cartItem.cartItemId !== action.payload.cartItemId
         ),
       };
@@ -157,10 +157,10 @@ export const cartReducer = (state = cart, action: Action) => {
 
     case "selectAttribute": {
       let changedProduct = state.items.find(
-        (cartItem: cartContent) =>
+        (cartItem: CartContent) =>
           cartItem.cartItemId === action.payload.product.cartItemId
       );
-      let nextCart = state.items.map((cartItem: cartContent) => {
+      let nextCart = state.items.map((cartItem: CartContent) => {
         if (cartItem.cartItemId !== changedProduct.cartItemId) {
           return cartItem;
         }

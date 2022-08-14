@@ -1,16 +1,16 @@
-import { currencyInfo } from "../types";
+import { CurrencyInfo } from "../types";
 
 type Currency = changeCurrency | currencyDropdown;
 
 type changeCurrency = {
   type: "changeCurrency";
-  payload: currencyInfo;
+  payload: CurrencyInfo;
 };
 type currencyDropdown = {
   type: "currencyDropdown";
 };
 
-const currency: currencyInfo = {
+const currency: CurrencyInfo = {
   label: "USD",
   symbol: "$",
   isActive: false,

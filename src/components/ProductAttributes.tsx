@@ -1,9 +1,9 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { attributesInfo, cartContent } from "../utils/types";
+import { AttributesInfo, CartContent } from "../utils/types";
 
 type Input = {
-  product: cartContent;
+  product: CartContent;
   styles: {
     attributeName: string;
     activeTextAttributeSelectButton: string;
@@ -17,14 +17,14 @@ export function ProductAttributes({ product, styles }: Input) {
   const dispatch = useDispatch();
 
   function handleSelectAttribute(
-    product: cartContent,
-    attribute: attributesInfo,
+    product: CartContent,
+    attribute: AttributesInfo,
     id: string
   ) {
     dispatch({ type: "selectAttribute", payload: { product, attribute, id } });
   }
 
-  function differAttributes(attribute: attributesInfo) {
+  function differAttributes(attribute: AttributesInfo) {
     return (
       <>
         <p className={styles.attributeName}>{attribute.name.toUpperCase()}:</p>

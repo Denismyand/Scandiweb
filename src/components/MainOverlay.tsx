@@ -6,11 +6,11 @@ import shopLogo from "../img/logo.svg";
 import { useCategories } from "../utils/request";
 import { getCartQuantity } from "../utils/reusableFunctions";
 import { useDispatch, useSelector } from "react-redux";
-import { cartReducer, categoryInfo } from "../utils/types";
+import { CartReducer, CategoryInfo } from "../utils/types";
 
 export function MainOverlay() {
   const miniCartActive = useSelector(
-    (state: cartReducer) => state.cart.isActive
+    (state: CartReducer) => state.cart.isActive
   );
 
   return (
@@ -23,19 +23,19 @@ export function MainOverlay() {
 }
 
 function Header() {
-  const cart = useSelector((state: cartReducer) => state.cart.items);
+  const cart = useSelector((state: CartReducer) => state.cart.items);
   const dispatch = useDispatch();
 
   function showMiniCart() {
     dispatch({ type: "showMiniCart", payload: "" });
   }
   const { loading, error, data } = useCategories();
-  if (loading) return <></>;
+  if (loading) return null;
   if (error) return <>`Error! {error}`</>;
   const categories = data.categories;
   return (
     <div className="header">
-      {categories.map((category: categoryInfo) => {
+      {categories.map((category: CategoryInfo) => {
         return (
           <NavLink
             className={({ isActive }) =>

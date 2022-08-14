@@ -1,3 +1,4 @@
+import React from "react";
 import styles from "./styles/cart.module.css";
 import { useState } from "react";
 import { ProductAttributes } from "./components/ProductAttributes";
@@ -6,8 +7,9 @@ import {
   getCartQuantity,
   getPercentOfCartTotal,
 } from "./utils/reusableFunctions";
+import { CartContent, PricesInfo } from "./utils/types";
 
-export function Cart({ cart }) {
+export function Cart({ cart }: { cart: CartContent[] }) {
   return (
     <div className={styles.cartPage}>
       <h1>CART</h1>
@@ -30,14 +32,14 @@ export function Cart({ cart }) {
   );
 }
 
-function CartItem({ cartItem }) {
+function CartItem({ cartItem }: { cartItem: CartContent }) {
   const dispatch = useDispatch();
 
-  function handleProductIsInCart(foundInCart) {
+  function handleProductIsInCart(foundInCart: CartContent) {
     dispatch({ type: "productIsInCart", payload: foundInCart });
   }
 
-  function handleDecreaseCartQuantity(product) {
+  function handleDecreaseCartQuantity(product: CartContent) {
     dispatch({ type: "decreaseCartQuantity", payload: product });
   }
 
@@ -66,8 +68,8 @@ function CartItem({ cartItem }) {
   );
 }
 
-function CartItemInfo({ cartItem }) {
-  const currency = useSelector((state) => state.currency);
+function CartItemInfo({ cartItem }: { cartItem: CartContent }) {
+  const currency = useSelector((state: PricesInfo) => state.currency);
 
   return (
     <>
@@ -86,7 +88,7 @@ function CartItemInfo({ cartItem }) {
   );
 }
 
-function CartItemPicture({ cartItem }) {
+function CartItemPicture({ cartItem }: { cartItem: CartContent }) {
   const [currentImg, setCurrentImg] = useState(0);
 
   function nextImg() {
@@ -124,8 +126,8 @@ function CartItemPicture({ cartItem }) {
   );
 }
 
-function CartTotal({ cart }) {
-  const currency = useSelector((state) => state.currency);
+function CartTotal({ cart }: { cart: CartContent[] }) {
+  const currency = useSelector((state: PricesInfo) => state.currency);
 
   const dispatch = useDispatch();
 

@@ -1,11 +1,19 @@
+import React from "react";
 import styles from "./styles/productpage.module.css";
 import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { sanitize } from "dompurify";
 import { useProduct } from "./utils/request";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  AttributesInfo,
+  CartContent,
+  CartReducer,
+  PredefinedAttrebutes,
+  PricesInfo,
+} from "./utils/types";
 
-function getInitialAttributes(product) {
+function getInitialAttributes(product: CartContent) {
   let begin = [];
   for (let i = 0; i < product.attributes.length; i++) {
     begin.push({ index: 0 });
@@ -18,15 +26,15 @@ export function ProductPageWrapper() {
   const { loading, error, data } = useProduct(productId);
 
   if (loading) return null;
-  if (error) return <p>Error :</p>;
+  if (error) return <>Error :</>;
 
   return <ProductPage product={data.product} />;
 }
 
-function ProductPage({ product }) {
+function ProductPage({ product }: { product: CartContent }) {
   const [currImg, setCurrImg] = useState(0);
 
-  function changeImage(imgIndex) {
+  function changeImage(imgIndex: number) {
     setCurrImg(imgIndex);
   }
 
@@ -59,12 +67,12 @@ function ProductPage({ product }) {
   );
 }
 
-function ProductInfo({ product }) {
+function ProductInfo({ product }: { product: CartContent }) {
   const [attributes, setAttributes] = useState(getInitialAttributes(product));
-  const currency = useSelector((state) => state.currency);
-  const cart = useSelector((state) => state.cart.items);
+  const currency = useSelector((state: PricesInfo) => state.currency);
+  const cart = useSelector((state: CartReducer) => state.cart.items);
 
-  function preDefineAttributes(attributeIndex, itemIndex) {
+  function preDefineAttributes(attributeIndex: number, itemIndex: number) {
     let newAttributes = attributes.map((attribute, i) => {
       if (i !== attributeIndex) return attribute;
       return { index: itemIndex };
@@ -72,7 +80,7 @@ function ProductInfo({ product }) {
     setAttributes(newAttributes);
   }
 
-  function handleAddToCart(product) {
+  function handleAddToCart(product: CartContent) {
     if (cart.length > 0) {
       let foundInCart = cart.find(
         (cartItem) => cartItem.id === product.id && isSame(cartItem)
@@ -86,7 +94,7 @@ function ProductInfo({ product }) {
 
   const similarity = useRef(true);
 
-  function isSame(foundInCart) {
+  function isSame(foundInCart: CartContent) {
     similarity.current = true;
     foundInCart.attributes.forEach((attribute, i) => {
       attribute.items.forEach((item, itemIndex) => {
@@ -102,11 +110,14 @@ function ProductInfo({ product }) {
 
   const dispatch = useDispatch();
 
-  function handleProductIsInCart(foundInCart) {
+  function handleProductIsInCart(foundInCart: CartContent) {
     dispatch({ type: "productIsInCart", payload: foundInCart });
   }
 
-  function handleProductPageProductIsNotInCart(product, attributes) {
+  function handleProductPageProductIsNotInCart(
+    product: CartContent,
+    attributes: PredefinedAttrebutes[]
+  ) {
     dispatch({
       type: "productPageProductIsNotInCart",
       payload: { product, attributes },
@@ -156,8 +167,16 @@ function ProductInfo({ product }) {
   );
 }
 
-function ProductAttributes({ product, attributes, preDefineAttributes }) {
-  function differAttributes(attribute, i) {
+function ProductAttributes({
+  product,
+  attributes,
+  preDefineAttributes,
+}: {
+  product: CartContent;
+  attributes: PredefinedAttrebutes[];
+  preDefineAttributes: (attributeIndex: number, itemIndex: number) => void;
+}) {
+  function differAttributes(attribute: AttributesInfo, i: number) {
     return (
       <>
         <p className={styles.attributeName}>{attribute.name.toUpperCase()}:</p>

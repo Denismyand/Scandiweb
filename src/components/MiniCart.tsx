@@ -7,10 +7,10 @@ import {
   getCartQuantity,
   getPercentOfCartTotal,
 } from "../utils/reusableFunctions";
-import { cartReducer, cartContent, pricesInfo } from "../utils/types";
+import { CartReducer, CartContent, PricesInfo } from "../utils/types";
 
 export function MiniCart() {
-  const cart = useSelector((state: cartReducer) => state.cart.items);
+  const cart = useSelector((state: CartReducer) => state.cart.items);
 
   const dispatch = useDispatch();
 
@@ -47,14 +47,14 @@ export function MiniCart() {
   );
 }
 
-function MiniCartItem({ cartItem }: { cartItem: cartContent }) {
+function MiniCartItem({ cartItem }: { cartItem: CartContent }) {
   const dispatch = useDispatch();
 
-  function handleProductIsInCart(foundInCart: cartContent) {
+  function handleProductIsInCart(foundInCart: CartContent) {
     dispatch({ type: "productIsInCart", payload: foundInCart });
   }
 
-  function handleDecreaseCartQuantity(product: cartContent) {
+  function handleDecreaseCartQuantity(product: CartContent) {
     dispatch({ type: "decreaseCartQuantity", payload: product });
   }
 
@@ -84,8 +84,8 @@ function MiniCartItem({ cartItem }: { cartItem: cartContent }) {
   );
 }
 
-function MiniCartItemInfo({ cartItem }: { cartItem: cartContent }) {
-  const currency = useSelector((state: pricesInfo) => state.currency);
+function MiniCartItemInfo({ cartItem }: { cartItem: CartContent }) {
+  const currency = useSelector((state: PricesInfo) => state.currency);
 
   return (
     <>
@@ -108,10 +108,10 @@ function MiniCartTotal({
   cart,
   showMiniCart,
 }: {
-  cart: cartContent[];
+  cart: CartContent[];
   showMiniCart: () => void;
 }) {
-  const currency = useSelector((state: pricesInfo) => state.currency);
+  const currency = useSelector((state: PricesInfo) => state.currency);
 
   return (
     <div className={styles.miniCartTotal}>

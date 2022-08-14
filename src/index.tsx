@@ -55,7 +55,9 @@ client.query({
   `,
 });
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLDivElement
+);
 root.render(
   <ApolloProvider client={client}>
     <Provider store={store}>
