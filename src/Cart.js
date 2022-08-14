@@ -1,6 +1,6 @@
 import styles from "./styles/cart.module.css";
 import { useState } from "react";
-import { ProductAttributes } from "./components/ProductAttributes.js";
+import { ProductAttributes } from "./components/ProductAttributes";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getCartQuantity,

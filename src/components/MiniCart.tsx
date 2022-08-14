@@ -1,14 +1,16 @@
+import React from "react";
 import styles from "../styles/minicart.module.css";
 import { Link } from "react-router-dom";
-import { ProductAttributes } from "./ProductAttributes.js";
+import { ProductAttributes } from "./ProductAttributes";
 import { useSelector, useDispatch } from "react-redux";
 import {
   getCartQuantity,
   getPercentOfCartTotal,
 } from "../utils/reusableFunctions";
+import { cartReducer, cartContent, pricesInfo } from "../utils/types";
 
 export function MiniCart() {
-  const cart = useSelector((state) => state.cart.items);
+  const cart = useSelector((state: cartReducer) => state.cart.items);
 
   const dispatch = useDispatch();
 
@@ -32,7 +34,7 @@ export function MiniCart() {
                 );
               })}
             </div>
-            <MiniCartTotal cart={cart} />
+            <MiniCartTotal cart={cart} showMiniCart={showMiniCart} />
           </>
         ) : (
           <div className={styles.cartEmptyMessage}>
@@ -45,14 +47,14 @@ export function MiniCart() {
   );
 }
 
-function MiniCartItem({ cartItem }) {
+function MiniCartItem({ cartItem }: { cartItem: cartContent }) {
   const dispatch = useDispatch();
 
-  function handleProductIsInCart(foundInCart) {
+  function handleProductIsInCart(foundInCart: cartContent) {
     dispatch({ type: "productIsInCart", payload: foundInCart });
   }
 
-  function handleDecreaseCartQuantity(product) {
+  function handleDecreaseCartQuantity(product: cartContent) {
     dispatch({ type: "decreaseCartQuantity", payload: product });
   }
 
@@ -82,8 +84,8 @@ function MiniCartItem({ cartItem }) {
   );
 }
 
-function MiniCartItemInfo({ cartItem }) {
-  const currency = useSelector((state) => state.currency);
+function MiniCartItemInfo({ cartItem }: { cartItem: cartContent }) {
+  const currency = useSelector((state: pricesInfo) => state.currency);
 
   return (
     <>
@@ -102,8 +104,14 @@ function MiniCartItemInfo({ cartItem }) {
   );
 }
 
-function MiniCartTotal({ cart, showMiniCart }) {
-  const currency = useSelector((state) => state.currency);
+function MiniCartTotal({
+  cart,
+  showMiniCart,
+}: {
+  cart: cartContent[];
+  showMiniCart: () => void;
+}) {
+  const currency = useSelector((state: pricesInfo) => state.currency);
 
   return (
     <div className={styles.miniCartTotal}>

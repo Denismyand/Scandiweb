@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { useCategory } from "./utils/request.js";
+import { useCategory } from "./utils/request";
 import styles from "./styles/categorypage.module.css";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";

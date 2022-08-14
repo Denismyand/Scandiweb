@@ -1,12 +1,16 @@
+import React from "react";
 import arrowDown from "../img/down-arrow.svg";
 import arrowUp from "../img/up-arrow.svg";
 import { useDispatch, useSelector } from "react-redux";
+import { pricesInfo } from "../utils/types";
 
 export function Currency() {
   const dispatch = useDispatch();
 
-  const currency = useSelector((state) => state.currency);
-  const currencyIsActive = useSelector((state) => state.currency.isActive);
+  const currency = useSelector((state: pricesInfo) => state.currency);
+  const currencyIsActive = useSelector(
+    (state: pricesInfo) => state.currency.isActive
+  );
 
   function showCurrencyDropdown() {
     dispatch({ type: "currencyDropdown", payload: "" });
@@ -43,7 +47,7 @@ function CurrencyList() {
   ];
 
   const dispatch = useDispatch();
-  function changeCurrency(currency) {
+  function changeCurrency(currency: object) {
     dispatch({ type: "changeCurrency", payload: currency });
   }
 

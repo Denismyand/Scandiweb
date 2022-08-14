@@ -1,15 +1,30 @@
+import React from "react";
 import { useDispatch } from "react-redux";
+import { attributesInfo, cartContent } from "../utils/types";
 
+type Input = {
+  product: cartContent;
+  styles: {
+    attributeName: string;
+    activeTextAttributeSelectButton: string;
+    textAttributeSelectButton: string;
+    activeSwatchAttributeSelectButton: string;
+    swatchAttributeSelectButton: string;
+  };
+};
 
-export function ProductAttributes({ product, styles }) {
-
+export function ProductAttributes({ product, styles }: Input) {
   const dispatch = useDispatch();
 
-  function handleSelectAttribute(product, attribute, id) {
-    dispatch({ type: "selectAttribute", payload: {product, attribute, id} });
+  function handleSelectAttribute(
+    product: cartContent,
+    attribute: attributesInfo,
+    id: string
+  ) {
+    dispatch({ type: "selectAttribute", payload: { product, attribute, id } });
   }
-  
-  function differAttributes(attribute) {
+
+  function differAttributes(attribute: attributesInfo) {
     return (
       <>
         <p className={styles.attributeName}>{attribute.name.toUpperCase()}:</p>
@@ -61,4 +76,3 @@ export function ProductAttributes({ product, styles }) {
     </>
   );
 }
-

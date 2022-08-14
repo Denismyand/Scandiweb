@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import "./styles/App.css";
 import { CategoryPage } from "./CategoryPage.js";
 import { ProductPageWrapper } from "./ProductPage.js";
-import { MainOverlay } from "./components/MainOverlay.js";
+import { MainOverlay } from "./components/MainOverlay";
 import { Cart } from "./Cart.js";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";

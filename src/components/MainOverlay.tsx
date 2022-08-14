@@ -1,13 +1,17 @@
-import { Currency } from "./Currency.js";
-import { MiniCart } from "./MiniCart.js";
+import React from "react";
+import { Currency } from "./Currency";
+import { MiniCart } from "./MiniCart";
 import { Outlet, NavLink } from "react-router-dom";
 import shopLogo from "../img/logo.svg";
-import { useCategories } from "../utils/request.js";
-import { getCartQuantity } from "../utils/reusableFunctions.js";
+import { useCategories } from "../utils/request";
+import { getCartQuantity } from "../utils/reusableFunctions";
 import { useDispatch, useSelector } from "react-redux";
+import { cartReducer, categoryInfo } from "../utils/types";
 
 export function MainOverlay() {
-  const miniCartActive = useSelector((state) => state.cart.isActive);
+  const miniCartActive = useSelector(
+    (state: cartReducer) => state.cart.isActive
+  );
 
   return (
     <>
@@ -19,19 +23,19 @@ export function MainOverlay() {
 }
 
 function Header() {
-  const cart = useSelector((state) => state.cart.items);
+  const cart = useSelector((state: cartReducer) => state.cart.items);
   const dispatch = useDispatch();
 
   function showMiniCart() {
     dispatch({ type: "showMiniCart", payload: "" });
   }
   const { loading, error, data } = useCategories();
-  if (loading) return null;
-  if (error) return `Error! ${error}`;
+  if (loading) return <></>;
+  if (error) return <>`Error! {error}`</>;
   const categories = data.categories;
   return (
     <div className="header">
-      {categories.map((category) => {
+      {categories.map((category: categoryInfo) => {
         return (
           <NavLink
             className={({ isActive }) =>

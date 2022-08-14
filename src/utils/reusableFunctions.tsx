@@ -1,12 +1,18 @@
-export function getCartQuantity(cart) {
+import { cartContent, currencyInfo } from "../utils/types";
+
+export function getCartQuantity(cart: cartContent[]) {
   return cart.reduce((total, current) => total + current.cartQuantity, 0);
 }
 
-export function getPercentOfCartTotal(percent, cart, currency) {
+export function getPercentOfCartTotal(
+  percent: number,
+  cart: cartContent[],
+  currency: currencyInfo
+) {
   let total = 0;
 
   cart.forEach((cartItem) => {
-    let itemPrice;
+    let itemPrice: number = 0;
 
     cartItem.prices.forEach((price) => {
       if (price.currency.label === currency.label) {

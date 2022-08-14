@@ -47,7 +47,7 @@ const getCategory = gql`
   }
 `;
 
-export const useCategory = (categoryName) => {
+export const useCategory = (categoryName: string) => {
   const { loading, error, data } = useQuery(getCategory, {
     variables: { categoryName },
   });
@@ -85,7 +85,7 @@ const getProduct = gql`
   }
 `;
 
-export const useProduct = (productId) => {
+export const useProduct = (productId: string) => {
   const { loading, error, data } = useQuery(getProduct, {
     variables: { productId },
   });

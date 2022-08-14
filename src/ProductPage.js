@@ -2,7 +2,7 @@ import styles from "./styles/productpage.module.css";
 import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { sanitize } from "dompurify";
-import { useProduct } from "./utils/request.js";
+import { useProduct } from "./utils/request";
 import { useDispatch, useSelector } from "react-redux";
 
 function getInitialAttributes(product) {
