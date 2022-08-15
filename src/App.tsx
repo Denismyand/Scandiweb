@@ -8,7 +8,7 @@ import { Cart } from "./Cart";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CartReducer, PricesInfo } from "./utils/types";
-import { currencyDropdown } from "./utils/reducers/currencyReducer";
+import { currencyDropdown } from "./utils/reducers/currencySlice";
 
 export default function App() {
   const dispatch = useDispatch();

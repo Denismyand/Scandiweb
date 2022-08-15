@@ -12,6 +12,10 @@ import {
   PredefinedAttrebutes,
   PricesInfo,
 } from "./utils/types";
+import {
+  productIsInCart,
+  productPageProductIsNotInCart,
+} from "./utils/reducers/cartSlice";
 
 function getInitialAttributes(product: CartContent) {
   let begin = [];
@@ -111,17 +115,14 @@ function ProductInfo({ product }: { product: CartContent }) {
   const dispatch = useDispatch();
 
   function handleProductIsInCart(foundInCart: CartContent) {
-    dispatch({ type: "productIsInCart", payload: foundInCart });
+    dispatch(productIsInCart(foundInCart));
   }
 
   function handleProductPageProductIsNotInCart(
     product: CartContent,
     attributes: PredefinedAttrebutes[]
   ) {
-    dispatch({
-      type: "productPageProductIsNotInCart",
-      payload: { product, attributes },
-    });
+    dispatch(productPageProductIsNotInCart({ product, attributes }));
   }
 
   return (

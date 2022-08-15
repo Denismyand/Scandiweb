@@ -6,7 +6,7 @@ import { PricesInfo } from "../utils/types";
 import {
   changeCurrency,
   currencyDropdown,
-} from "../utils/reducers/currencyReducer";
+} from "../utils/reducers/currencySlice";
 
 export function Currency() {
   const dispatch = useDispatch();

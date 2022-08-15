@@ -1,50 +1,6 @@
+import { createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 import { AttributesInfo, CartContent } from "../types";
-
-type Action =
-  | showMiniCart
-  | productIsInCart
-  | productIsNotInCart
-  | productPageProductIsNotInCart
-  | decreaseCartQuantity
-  | selectAttribute
-  | setToEmpty;
-
-type showMiniCart = {
-  type: "showMiniCart";
-};
-
-type productIsInCart = {
-  type: "productIsInCart";
-  payload: { cartItemId: string; cartQuantity: number };
-};
-
-type productIsNotInCart = {
-  type: "productIsNotInCart";
-  payload: { attributes: AttributesInfo[] };
-};
-
-type productPageProductIsNotInCart = {
-  type: "productPageProductIsNotInCart";
-  payload: {
-    product: { attributes: AttributesInfo[] };
-    attributes: { index: number }[];
-  };
-};
-
-type decreaseCartQuantity = {
-  type: "decreaseCartQuantity";
-  payload: { cartItemId: string; cartQuantity: number };
-};
-
-type selectAttribute = {
-  type: "selectAttribute";
-  payload: { id: string; attribute: { id: string }; product: CartContent };
-};
-
-type setToEmpty = {
-  type: "setToEmpty";
-};
 
 let cachedCart = localStorage.getItem("cart");
 function isCartCached() {
@@ -58,13 +14,14 @@ const cart = { isActive: false, items: isCartCached() };
 
 const maxCartQuantity = 5;
 
-export const cartReducer = (state = cart, action: Action) => {
-  switch (action.type) {
-    case "showMiniCart": {
+const cartSlice = createSlice({
+  name: "cart",
+  initialState: cart,
+  reducers: {
+    showMiniCart(state) {
       return { ...state, isActive: !state.isActive };
-    }
-
-    case "productIsInCart": {
+    },
+    productIsInCart(state, action) {
       let nextCart = state.items.map((cartItem: CartContent) => {
         if (cartItem.cartItemId === action.payload.cartItemId) {
           if (action.payload.cartQuantity >= maxCartQuantity) {
@@ -78,9 +35,8 @@ export const cartReducer = (state = cart, action: Action) => {
         return cartItem;
       });
       return { ...state, items: nextCart };
-    }
-
-    case "productIsNotInCart": {
+    },
+    productIsNotInCart(state, action) {
       let newAttributes = action.payload.attributes.map(
         (attribute: AttributesInfo) => {
           let newItems = attribute.items.map((item, i) => {
@@ -104,9 +60,8 @@ export const cartReducer = (state = cart, action: Action) => {
           },
         ],
       };
-    }
-
-    case "productPageProductIsNotInCart": {
+    },
+    productPageProductIsNotInCart(state, action) {
       let newAttributes = action.payload.product.attributes.map(
         (attribute: AttributesInfo, i: number) => {
           let newItems = attribute.items.map((item, index) => {
@@ -130,9 +85,8 @@ export const cartReducer = (state = cart, action: Action) => {
           },
         ],
       };
-    }
-
-    case "decreaseCartQuantity": {
+    },
+    decreaseCartQuantity(state, action) {
       if (action.payload.cartQuantity > 1) {
         let decreased = state.items.map((cartItem: CartContent) => {
           if (cartItem.cartItemId === action.payload.cartItemId) {
@@ -153,9 +107,8 @@ export const cartReducer = (state = cart, action: Action) => {
             cartItem.cartItemId !== action.payload.cartItemId
         ),
       };
-    }
-
-    case "selectAttribute": {
+    },
+    selectAttribute(state, action) {
       let changedProduct = state.items.find(
         (cartItem: CartContent) =>
           cartItem.cartItemId === action.payload.product.cartItemId
@@ -185,14 +138,20 @@ export const cartReducer = (state = cart, action: Action) => {
         return { ...cartItem, attributes: nextAttribute };
       });
       return { ...state, items: nextCart };
-    }
-
-    case "setToEmpty": {
+    },
+    setToEmpty(state) {
       return { ...state, items: [] };
-    }
+    },
+  },
+});
 
-    default: {
-      return state;
-    }
-  }
-};
+export default cartSlice.reducer;
+export const {
+  showMiniCart,
+  productIsInCart,
+  productIsNotInCart,
+  productPageProductIsNotInCart,
+  decreaseCartQuantity,
+  selectAttribute,
+  setToEmpty,
+} = cartSlice.actions;

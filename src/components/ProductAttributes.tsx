@@ -1,5 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
+import { selectAttribute } from "../utils/reducers/cartSlice";
 import { AttributesInfo, CartContent } from "../utils/types";
 
 type Input = {
@@ -21,7 +22,7 @@ export function ProductAttributes({ product, styles }: Input) {
     attribute: AttributesInfo,
     id: string
   ) {
-    dispatch({ type: "selectAttribute", payload: { product, attribute, id } });
+    dispatch(selectAttribute({ product, attribute, id }));
   }
 
   function differAttributes(attribute: AttributesInfo) {

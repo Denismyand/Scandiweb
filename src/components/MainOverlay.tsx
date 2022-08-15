@@ -7,6 +7,7 @@ import { useCategories } from "../utils/request";
 import { getCartQuantity } from "../utils/reusableFunctions";
 import { useDispatch, useSelector } from "react-redux";
 import { CartReducer, CategoryInfo } from "../utils/types";
+import { showMiniCart } from "../utils/reducers/cartSlice";
 
 export function MainOverlay() {
   const miniCartActive = useSelector(
@@ -26,9 +27,6 @@ function Header() {
   const cart = useSelector((state: CartReducer) => state.cart.items);
   const dispatch = useDispatch();
 
-  function showMiniCart() {
-    dispatch({ type: "showMiniCart", payload: "" });
-  }
   const { loading, error, data } = useCategories();
   if (loading) return null;
   if (error) return <>`Error! {error}`</>;
@@ -50,7 +48,10 @@ function Header() {
       })}
       <img className="logo" src={shopLogo} alt="logo" />
       <Currency />
-      <button className="headerCartButton" onClick={showMiniCart}>
+      <button
+        className="headerCartButton"
+        onClick={() => dispatch(showMiniCart())}
+      >
         {cart.length > 0 && (
           <span className="headerCartQuantity">{getCartQuantity(cart)}</span>
         )}

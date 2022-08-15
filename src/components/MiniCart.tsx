@@ -8,19 +8,23 @@ import {
   getPercentOfCartTotal,
 } from "../utils/reusableFunctions";
 import { CartReducer, CartContent, PricesInfo } from "../utils/types";
+import {
+  decreaseCartQuantity,
+  productIsInCart,
+  showMiniCart,
+} from "../utils/reducers/cartSlice";
 
 export function MiniCart() {
   const cart = useSelector((state: CartReducer) => state.cart.items);
 
   const dispatch = useDispatch();
 
-  function showMiniCart() {
-    dispatch({ type: "showMiniCart", payload: "" });
-  }
-
   return (
     <>
-      <div className={styles.miniCartBackground} onClick={showMiniCart} />
+      <div
+        className={styles.miniCartBackground}
+        onClick={() => dispatch(showMiniCart())}
+      />
       <div className={styles.miniCart}>
         {cart.length > 0 ? (
           <>
@@ -34,7 +38,7 @@ export function MiniCart() {
                 );
               })}
             </div>
-            <MiniCartTotal cart={cart} showMiniCart={showMiniCart} />
+            <MiniCartTotal cart={cart} />
           </>
         ) : (
           <div className={styles.cartEmptyMessage}>
@@ -51,11 +55,11 @@ function MiniCartItem({ cartItem }: { cartItem: CartContent }) {
   const dispatch = useDispatch();
 
   function handleProductIsInCart(foundInCart: CartContent) {
-    dispatch({ type: "productIsInCart", payload: foundInCart });
+    dispatch(productIsInCart(foundInCart));
   }
 
   function handleDecreaseCartQuantity(product: CartContent) {
-    dispatch({ type: "decreaseCartQuantity", payload: product });
+    dispatch(decreaseCartQuantity(product));
   }
 
   return (
@@ -104,13 +108,8 @@ function MiniCartItemInfo({ cartItem }: { cartItem: CartContent }) {
   );
 }
 
-function MiniCartTotal({
-  cart,
-  showMiniCart,
-}: {
-  cart: CartContent[];
-  showMiniCart: () => void;
-}) {
+function MiniCartTotal({ cart }: { cart: CartContent[] }) {
+  const dispatch = useDispatch();
   const currency = useSelector((state: PricesInfo) => state.currency);
 
   return (
@@ -120,7 +119,7 @@ function MiniCartTotal({
         <Link
           className={styles.toCartMiniCartButton}
           to="/cart"
-          onClick={showMiniCart}
+          onClick={() => dispatch(showMiniCart())}
         >
           VIEW CART
         </Link>
@@ -130,7 +129,7 @@ function MiniCartTotal({
         <Link
           className={styles.toCheckoutMiniCartButton}
           to="/cart"
-          onClick={showMiniCart}
+          onClick={() => dispatch(showMiniCart())}
         >
           CHECK OUT
         </Link>

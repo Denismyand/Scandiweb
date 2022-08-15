@@ -8,6 +8,11 @@ import {
   getPercentOfCartTotal,
 } from "./utils/reusableFunctions";
 import { CartContent, PricesInfo } from "./utils/types";
+import {
+  decreaseCartQuantity,
+  productIsInCart,
+  setToEmpty,
+} from "./utils/reducers/cartSlice";
 
 export function Cart({ cart }: { cart: CartContent[] }) {
   return (
@@ -36,11 +41,11 @@ function CartItem({ cartItem }: { cartItem: CartContent }) {
   const dispatch = useDispatch();
 
   function handleProductIsInCart(foundInCart: CartContent) {
-    dispatch({ type: "productIsInCart", payload: foundInCart });
+    dispatch(productIsInCart(foundInCart));
   }
 
   function handleDecreaseCartQuantity(product: CartContent) {
-    dispatch({ type: "decreaseCartQuantity", payload: product });
+    dispatch(decreaseCartQuantity(product));
   }
 
   return (
@@ -131,10 +136,6 @@ function CartTotal({ cart }: { cart: CartContent[] }) {
 
   const dispatch = useDispatch();
 
-  function emptyCart() {
-    dispatch({ type: "setToEmpty", payload: "" });
-  }
-
   const tax = 21;
   return (
     <>
@@ -157,7 +158,10 @@ function CartTotal({ cart }: { cart: CartContent[] }) {
           </p>
         </div>
       </div>
-      <button className={styles.orderButton} onClick={() => emptyCart()}>
+      <button
+        className={styles.orderButton}
+        onClick={() => dispatch(setToEmpty())}
+      >
         ORDER
       </button>
     </>

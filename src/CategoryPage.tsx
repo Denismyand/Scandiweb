@@ -5,6 +5,10 @@ import styles from "./styles/categorypage.module.css";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CartContent, CartReducer, PricesInfo } from "./utils/types";
+import {
+  productIsInCart,
+  productIsNotInCart,
+} from "./utils/reducers/cartSlice";
 
 export function CategoryPage() {
   const { categoryName } = useParams();
@@ -62,11 +66,11 @@ function Product({ product }: { product: CartContent }) {
   }
 
   function handleProductIsInCart(foundInCart: CartContent) {
-    dispatch({ type: "productIsInCart", payload: foundInCart });
+    dispatch(productIsInCart(foundInCart));
   }
 
   function handleProductIsNotInCart(product: CartContent) {
-    dispatch({ type: "productIsNotInCart", payload: product });
+    dispatch(productIsNotInCart(product));
   }
 
   return (
