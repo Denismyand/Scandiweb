@@ -8,6 +8,7 @@ import { Cart } from "./Cart";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CartReducer, PricesInfo } from "./utils/types";
+import { currencyDropdown } from "./utils/reducers/currencyReducer";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -18,16 +19,12 @@ export default function App() {
     (state: PricesInfo) => state.currency.isActive
   );
 
-  function showCurrencyDropdown() {
-    dispatch({ type: "currencyDropdown", payload: "" });
-  }
-
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
   return (
-    <div onClick={() => currencyIsActive && showCurrencyDropdown()}>
+    <div onClick={() => currencyIsActive && dispatch(currencyDropdown())}>
       <Routes>
         <Route
           path="/*"

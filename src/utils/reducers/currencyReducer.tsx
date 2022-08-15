@@ -1,14 +1,5 @@
 import { CurrencyInfo } from "../types";
-
-type Currency = changeCurrency | currencyDropdown;
-
-type changeCurrency = {
-  type: "changeCurrency";
-  payload: CurrencyInfo;
-};
-type currencyDropdown = {
-  type: "currencyDropdown";
-};
+import { createSlice } from "@reduxjs/toolkit";
 
 const currency: CurrencyInfo = {
   label: "USD",
@@ -16,16 +7,18 @@ const currency: CurrencyInfo = {
   isActive: false,
 };
 
-export const currencyReducer = (state = currency, action: Currency) => {
-  switch (action.type) {
-    case "changeCurrency": {
-      return action.payload;
-    }
-    case "currencyDropdown": {
-      return { ...state, isActive: !state.isActive };
-    }
-    default: {
-      return state;
-    }
-  }
-};
+const currencySlice = createSlice({
+  name: "currency",
+  initialState: currency,
+  reducers: {
+    changeCurrency(state: CurrencyInfo, action: { payload: CurrencyInfo }) {
+      return (state = action.payload);
+    },
+    currencyDropdown(state) {
+      return (state = { ...state, isActive: !state.isActive });
+    },
+  },
+});
+
+export default currencySlice.reducer;
+export const { changeCurrency, currencyDropdown } = currencySlice.actions;
